@@ -8,6 +8,7 @@ import {
   calcularTotal,
   formatarPreco,
 } from "@/lib/carrinho";
+import SecoesPersistentesCarrinho from "./SecoesPersistentesCarrinho";
 
 export default function CarrinhoDrawer() {
   const { itens, aberto, fecharCarrinho, removerItem, atualizarQuantidade, abrirCheckout } =
@@ -88,6 +89,8 @@ export default function CarrinhoDrawer() {
               ))}
             </ul>
           )}
+
+          <SecoesPersistentesCarrinho />
         </div>
 
         {itens.length > 0 && (

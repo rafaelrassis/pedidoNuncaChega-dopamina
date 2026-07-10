@@ -1,12 +1,5 @@
 import type { Regiao } from "@prisma/client";
-
-const REGIOES: { valor: Regiao; rotulo: string; emoji: string }[] = [
-  { valor: "NORDESTE", rotulo: "Nordeste", emoji: "🌵" },
-  { valor: "NORTE", rotulo: "Norte", emoji: "🌳" },
-  { valor: "SUDESTE", rotulo: "Sudeste", emoji: "🏙️" },
-  { valor: "SUL", rotulo: "Sul", emoji: "🧉" },
-  { valor: "CENTRO_OESTE", rotulo: "Centro-Oeste", emoji: "🌾" },
-];
+import { REGIOES_INFO } from "@/lib/regioes";
 
 export default function ChipsRegiao({
   selecionada,
@@ -17,7 +10,7 @@ export default function ChipsRegiao({
 }) {
   return (
     <div className="flex flex-wrap justify-center gap-2">
-      {REGIOES.map((r) => {
+      {REGIOES_INFO.map((r) => {
         const ativo = selecionada === r.valor;
         return (
           <button

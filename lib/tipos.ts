@@ -16,6 +16,7 @@ export type ItemCarrinho = {
   nome: string;
   slug: string;
   fotoUrl: string;
+  regiao: Regiao;
   precoUnitario: number;
   precoOriginalUnitario: number;
   quantidade: number;

@@ -15,6 +15,7 @@ import CarrinhoDrawer from "./CarrinhoDrawer";
 import BarraFixaCarrinho from "./BarraFixaCarrinho";
 import CheckoutModal from "./CheckoutModal";
 import TrackingModal from "./TrackingModal";
+import ModalEntrega from "./ModalEntrega";
 import Rodape from "./Rodape";
 
 export default function PaginaInicialCliente({ comidas }: { comidas: ComidaCliente[] }) {
@@ -84,6 +85,7 @@ export default function PaginaInicialCliente({ comidas }: { comidas: ComidaClien
         <BarraFixaCarrinho />
         <CheckoutModal />
         <TrackingModal />
+        <ModalEntrega />
       </div>
     </CarrinhoProvider>
   );

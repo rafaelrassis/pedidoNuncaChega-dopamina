@@ -7,10 +7,6 @@
 
 import type { ItemCarrinho, PedidoSalvo } from "./tipos";
 
-export type Passaporte = {
-  carimbos: string[];
-};
-
 export type Streak = {
   dias: number;
   ultimaData: string | null;
@@ -18,8 +14,6 @@ export type Streak = {
 
 const CHAVES = {
   pedidos: "pnc:pedidos",
-  album: "pnc:album",
-  passaporte: "pnc:passaporte",
   streak: "pnc:streak",
   carrinho: "pnc:carrinho",
   enderecoIndice: "pnc:enderecoIndice",
@@ -44,13 +38,6 @@ function escrever<T>(chave: string, valor: T): void {
 export const storage = {
   getPedidos: () => ler<PedidoSalvo[]>(CHAVES.pedidos, []),
   setPedidos: (pedidos: PedidoSalvo[]) => escrever(CHAVES.pedidos, pedidos),
-
-  getAlbum: () => ler<string[]>(CHAVES.album, []),
-  setAlbum: (figurinhas: string[]) => escrever(CHAVES.album, figurinhas),
-
-  getPassaporte: () => ler<Passaporte>(CHAVES.passaporte, { carimbos: [] }),
-  setPassaporte: (passaporte: Passaporte) =>
-    escrever(CHAVES.passaporte, passaporte),
 
   getStreak: () => ler<Streak>(CHAVES.streak, { dias: 0, ultimaData: null }),
   setStreak: (streak: Streak) => escrever(CHAVES.streak, streak),

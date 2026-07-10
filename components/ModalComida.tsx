@@ -47,6 +47,7 @@ export default function ModalComida({
       nome: comida.nome,
       slug: comida.slug,
       fotoUrl: comida.fotoUrl,
+      regiao: comida.regiao,
       precoUnitario,
       precoOriginalUnitario,
       quantidade,

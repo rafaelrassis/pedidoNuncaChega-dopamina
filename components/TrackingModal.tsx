@@ -20,11 +20,10 @@ function formatarTempo(segundos: number): string {
 }
 
 export default function TrackingModal() {
-  const { pedidoAtual, trackingAberto, fecharTracking, marcarPedidoEntregue } = useCarrinho();
+  const { pedidoAtual, trackingAberto, marcarPedidoEntregue } = useCarrinho();
   const [segundosRestantes, setSegundosRestantes] = useState(DURACAO_INICIAL_SEGUNDOS);
   const [duracaoTotal, setDuracaoTotal] = useState(DURACAO_INICIAL_SEGUNDOS);
   const [eventos, setEventos] = useState<EventoFeed[]>([]);
-  const [entregue, setEntregue] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -33,7 +32,6 @@ export default function TrackingModal() {
 
     setSegundosRestantes(DURACAO_INICIAL_SEGUNDOS);
     setDuracaoTotal(DURACAO_INICIAL_SEGUNDOS);
-    setEntregue(false);
     setEventos([{ texto: "Pedido confirmado ✅", horario: horaAgora() }]);
 
     const nomeMotoboy = pedidoAtual.motoboy.nome;
@@ -90,12 +88,10 @@ export default function TrackingModal() {
   }, [trackingAberto, pedidoAtual?.id]);
 
   useEffect(() => {
-    if (segundosRestantes === 0 && pedidoAtual && !entregue) {
-      setEntregue(true);
-      setEventos((atual) => [...atual, { texto: "Entregue! (mentira) 🎉", horario: horaAgora() }]);
+    if (segundosRestantes === 0 && pedidoAtual && trackingAberto) {
       marcarPedidoEntregue(pedidoAtual.id);
     }
-  }, [segundosRestantes, pedidoAtual, entregue, marcarPedidoEntregue]);
+  }, [segundosRestantes, pedidoAtual, trackingAberto, marcarPedidoEntregue]);
 
   function mostrarToast(mensagem: string) {
     setToast(mensagem);
@@ -135,9 +131,7 @@ export default function TrackingModal() {
       <div className="flex max-h-[92vh] w-full max-w-lg flex-col overflow-y-auto rounded-t-3xl bg-white sm:rounded-3xl">
         <div className="flex flex-col gap-4 p-6">
           <div>
-            <h2 className="font-display text-xl font-bold">
-              {entregue ? "🎉 Chegou! (virtualmente)" : "🏍️ A caminho!"}
-            </h2>
+            <h2 className="font-display text-xl font-bold">🏍️ A caminho!</h2>
             <p className="text-sm text-foreground/60">
               Pedido #{pedidoAtual.id} · &ldquo;pago&rdquo; {formatarPreco(pedidoAtual.total)}
             </p>
@@ -168,24 +162,18 @@ export default function TrackingModal() {
             </text>
           </svg>
 
-          {!entregue ? (
-            <div>
-              <div className="mb-1 flex justify-between text-sm font-semibold">
-                <span>Chegando em</span>
-                <span>{formatarTempo(segundosRestantes)}</span>
-              </div>
-              <div className="h-2 w-full overflow-hidden rounded-full bg-black/10">
-                <div
-                  className="h-full rounded-full bg-primaria transition-all duration-1000"
-                  style={{ width: `${progresso * 100}%` }}
-                />
-              </div>
+          <div>
+            <div className="mb-1 flex justify-between text-sm font-semibold">
+              <span>Chegando em</span>
+              <span>{formatarTempo(segundosRestantes)}</span>
             </div>
-          ) : (
-            <p className="rounded-xl bg-destaque/10 p-3 text-center text-sm font-semibold text-destaque">
-              A comida nunca chegou de verdade — mas a dopamina, sim. 🧠❤️
-            </p>
-          )}
+            <div className="h-2 w-full overflow-hidden rounded-full bg-black/10">
+              <div
+                className="h-full rounded-full bg-primaria transition-all duration-1000"
+                style={{ width: `${progresso * 100}%` }}
+              />
+            </div>
+          </div>
 
           <div className="flex items-center gap-3 rounded-xl bg-fundo p-3">
             <span className="text-3xl">{pedidoAtual.motoboy.avatarEmoji}</span>
@@ -258,15 +246,6 @@ export default function TrackingModal() {
               📸 Compartilhar
             </button>
           </div>
-
-          {entregue && (
-            <button
-              onClick={fecharTracking}
-              className="rounded-full bg-primaria py-3 font-semibold text-white transition hover:opacity-90"
-            >
-              Concluído
-            </button>
-          )}
         </div>
 
         {toast && (

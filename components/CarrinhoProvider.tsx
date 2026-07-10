@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import type { Regiao } from "@prisma/client";
 import { storage } from "@/lib/storage";
 import type { ItemCarrinho, MotoboyPublico, OpcaoSelecionada, PedidoSalvo } from "@/lib/tipos";
 import {
@@ -27,6 +28,7 @@ type NovoItemCarrinho = {
   nome: string;
   slug: string;
   fotoUrl: string;
+  regiao: Regiao;
   precoUnitario: number;
   precoOriginalUnitario: number;
   quantidade: number;
@@ -51,12 +53,16 @@ type CarrinhoContextValor = {
   fecharCheckout: () => void;
 
   motoboys: MotoboyPublico[];
+  pedidos: PedidoSalvo[];
   criarPedido: () => PedidoSalvo | null;
 
   pedidoAtual: PedidoSalvo | null;
   trackingAberto: boolean;
   fecharTracking: () => void;
   marcarPedidoEntregue: (id: string) => void;
+
+  entregaAberta: boolean;
+  fecharEntrega: () => void;
 };
 
 const CarrinhoContext = createContext<CarrinhoContextValor | null>(null);
@@ -67,14 +73,17 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   const [enderecoIndice, setEnderecoIndice] = useState(0);
   const [checkoutAberto, setCheckoutAberto] = useState(false);
   const [motoboys, setMotoboys] = useState<MotoboyPublico[]>([]);
+  const [pedidos, setPedidos] = useState<PedidoSalvo[]>([]);
   const [pedidoAtual, setPedidoAtual] = useState<PedidoSalvo | null>(null);
   const [trackingAberto, setTrackingAberto] = useState(false);
-  const carregouRef = useRef(false);
+  const [entregaAberta, setEntregaAberta] = useState(false);
+  const [carregado, setCarregado] = useState(false);
 
   useEffect(() => {
     setItens(storage.getCarrinho());
     setEnderecoIndice(storage.getEnderecoIndice());
-    carregouRef.current = true;
+    setPedidos(storage.getPedidos());
+    setCarregado(true);
 
     fetch("/api/motoboys")
       .then((res) => (res.ok ? res.json() : []))
@@ -83,8 +92,12 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (carregouRef.current) storage.setCarrinho(itens);
-  }, [itens]);
+    if (carregado) storage.setCarrinho(itens);
+  }, [itens, carregado]);
+
+  useEffect(() => {
+    if (carregado) storage.setPedidos(pedidos);
+  }, [pedidos, carregado]);
 
   function adicionarItem(novo: NovoItemCarrinho) {
     const chaveNova = gerarChaveOpcoes(novo.opcoes);
@@ -107,6 +120,7 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
           nome: novo.nome,
           slug: novo.slug,
           fotoUrl: novo.fotoUrl,
+          regiao: novo.regiao,
           precoUnitario: novo.precoUnitario,
           precoOriginalUnitario: novo.precoOriginalUnitario,
           quantidade: novo.quantidade,
@@ -164,7 +178,7 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
       status: "a_caminho",
     };
 
-    storage.setPedidos([...storage.getPedidos(), pedido]);
+    setPedidos((atual) => [...atual, pedido]);
     storage.incrementarContadorDesejos();
     setItens([]);
     setCheckoutAberto(false);
@@ -176,14 +190,22 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
 
   function fecharTracking() {
     setTrackingAberto(false);
-    setPedidoAtual(null);
   }
 
   function marcarPedidoEntregue(id: string) {
-    setPedidoAtual((atual) => (atual && atual.id === id ? { ...atual, status: "entregue" } : atual));
-    storage.setPedidos(
-      storage.getPedidos().map((p) => (p.id === id ? { ...p, status: "entregue" as const } : p))
+    setPedidoAtual((atual) =>
+      atual && atual.id === id ? { ...atual, status: "entregue" } : atual
     );
+    setPedidos((atual) =>
+      atual.map((p) => (p.id === id ? { ...p, status: "entregue" as const } : p))
+    );
+    setTrackingAberto(false);
+    setEntregaAberta(true);
+  }
+
+  function fecharEntrega() {
+    setEntregaAberta(false);
+    setPedidoAtual(null);
   }
 
   return (
@@ -209,12 +231,16 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
         fecharCheckout: () => setCheckoutAberto(false),
 
         motoboys,
+        pedidos,
         criarPedido,
 
         pedidoAtual,
         trackingAberto,
         fecharTracking,
         marcarPedidoEntregue,
+
+        entregaAberta,
+        fecharEntrega,
       }}
     >
       {children}
