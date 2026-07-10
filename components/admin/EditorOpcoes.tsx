@@ -1,11 +1,8 @@
 "use client";
 
-export type OpcaoItem = { nome: string; acrescimo: number };
-export type GrupoOpcoes = {
-  grupo: string;
-  tipo: "radio" | "checkbox";
-  opcoes: OpcaoItem[];
-};
+import type { OpcaoItem, GrupoOpcoes } from "@/lib/tipos";
+
+export type { OpcaoItem, GrupoOpcoes };
 
 export default function EditorOpcoes({
   value,

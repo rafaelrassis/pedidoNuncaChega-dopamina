@@ -5,6 +5,8 @@
  * motoboys), nunca para estado do jogador.
  */
 
+import type { ItemCarrinho } from "./tipos";
+
 export type Pedido = {
   id: string;
   item: string;
@@ -26,6 +28,9 @@ const CHAVES = {
   album: "pnc:album",
   passaporte: "pnc:passaporte",
   streak: "pnc:streak",
+  carrinho: "pnc:carrinho",
+  enderecoIndice: "pnc:enderecoIndice",
+  contadorDesejos: "pnc:contadorDesejos",
 } as const;
 
 function ler<T>(chave: string, valorPadrao: T): T {
@@ -56,4 +61,25 @@ export const storage = {
 
   getStreak: () => ler<Streak>(CHAVES.streak, { dias: 0, ultimaData: null }),
   setStreak: (streak: Streak) => escrever(CHAVES.streak, streak),
+
+  getCarrinho: () => ler<ItemCarrinho[]>(CHAVES.carrinho, []),
+  setCarrinho: (itens: ItemCarrinho[]) => escrever(CHAVES.carrinho, itens),
+
+  getEnderecoIndice: () => ler<number>(CHAVES.enderecoIndice, 0),
+  setEnderecoIndice: (indice: number) => escrever(CHAVES.enderecoIndice, indice),
+
+  getContadorDesejos: (): number => {
+    if (typeof window === "undefined") return 50000;
+    const bruto = window.localStorage.getItem(CHAVES.contadorDesejos);
+    if (bruto) return Number(bruto);
+    const inicial = Math.floor(40000 + Math.random() * 20000);
+    window.localStorage.setItem(CHAVES.contadorDesejos, String(inicial));
+    return inicial;
+  },
+  incrementarContadorDesejos: (): number => {
+    const atual = storage.getContadorDesejos();
+    const novo = atual + 1;
+    escrever(CHAVES.contadorDesejos, novo);
+    return novo;
+  },
 };

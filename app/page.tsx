@@ -1,23 +1,32 @@
-import Cabecalho from "@/components/Cabecalho";
-import Rodape from "@/components/Rodape";
+import { prisma } from "@/lib/prisma";
+import PaginaInicialCliente from "@/components/PaginaInicialCliente";
+import type { GrupoOpcoes } from "@/lib/tipos";
 
-export default function Home() {
-  return (
-    <div className="flex min-h-screen flex-col">
-      <Cabecalho />
-      <main className="flex flex-1 flex-col items-center justify-center gap-6 px-6 text-center">
-        <h1 className="font-display text-4xl font-bold sm:text-6xl">
-          Seu pedido <span className="text-primaria">nunca chega</span>.
-        </h1>
-        <p className="max-w-xl text-lg text-foreground/80">
-          Peça comida fake, acompanhe o motoboy fake, colecione figurinhas de
-          motoboy e ganhe dopamina grátis enquanto o app te enrola com carinho.
-        </p>
-        <button className="rounded-full bg-primaria px-8 py-3 font-semibold text-white transition hover:opacity-90">
-          Fazer pedido
-        </button>
-      </main>
-      <Rodape />
-    </div>
-  );
+export const revalidate = 300;
+
+export default async function Home() {
+  const comidas = await prisma.comida.findMany({
+    where: { ativo: true },
+    orderBy: { nome: "asc" },
+  });
+
+  const comidasCliente = comidas.map((c) => ({
+    id: c.id,
+    nome: c.nome,
+    slug: c.slug,
+    regiao: c.regiao,
+    descricao: c.descricao,
+    precoFake: Number(c.precoFake),
+    descontoPct: c.descontoPct,
+    avaliacaoFake: Number(c.avaliacaoFake),
+    numAvaliacoesFake: c.numAvaliacoesFake,
+    tempoPreparoMin: c.tempoPreparoMin,
+    fotoUrl: c.fotoUrl,
+    vegetariano: c.vegetariano,
+    trending: c.trending,
+    best: c.best,
+    opcoesJson: c.opcoesJson as unknown as GrupoOpcoes[],
+  }));
+
+  return <PaginaInicialCliente comidas={comidasCliente} />;
 }
