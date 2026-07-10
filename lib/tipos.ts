@@ -17,6 +17,7 @@ export type ItemCarrinho = {
   slug: string;
   fotoUrl: string;
   precoUnitario: number;
+  precoOriginalUnitario: number;
   quantidade: number;
   opcoes: OpcaoSelecionada[];
 };
@@ -46,3 +47,29 @@ export const ENDERECOS_DISPONIVEIS: Endereco[] = [
   { emoji: "🛋️", texto: "Sofá da Sala, s/n", tempoMin: 8 },
   { emoji: "🛏️", texto: "Cama, Embaixo do Edredom", tempoMin: 3 },
 ];
+
+export type Raridade = "COMUM" | "RARO" | "LENDARIO";
+
+export type MotoboyPublico = {
+  id: string;
+  nome: string;
+  avatarEmoji: string;
+  frase: string;
+  raridade: Raridade;
+  pesoSorteio: number;
+};
+
+export type StatusPedido = "a_caminho" | "entregue";
+
+export type PedidoSalvo = {
+  id: string;
+  itens: ItemCarrinho[];
+  subtotal: number;
+  economia: number;
+  entrega: number;
+  impostos: number;
+  total: number;
+  criadoEm: string;
+  motoboy: MotoboyPublico;
+  status: StatusPedido;
+};

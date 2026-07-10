@@ -24,6 +24,19 @@ export function contarItens(itens: ItemCarrinho[]): number {
   return itens.reduce((soma, item) => soma + item.quantidade, 0);
 }
 
+export function calcularEconomia(itens: ItemCarrinho[]): number {
+  return itens.reduce(
+    (soma, item) =>
+      soma + (item.precoOriginalUnitario - item.precoUnitario) * item.quantidade,
+    0
+  );
+}
+
+export function gerarIdPedido(): string {
+  const digitos = Math.floor(1000 + Math.random() * 9000);
+  return `PNC${digitos}`;
+}
+
 export function formatarPreco(valor: number): string {
   return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }

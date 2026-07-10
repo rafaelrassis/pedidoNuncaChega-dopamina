@@ -32,6 +32,7 @@ export default function ModalComida({
     return soma + (opcao?.acrescimo ?? 0);
   }, 0);
   const precoUnitario = precoBase + acrescimos;
+  const precoOriginalUnitario = comida.precoFake + acrescimos;
   const precoTotal = precoUnitario * quantidade;
 
   function confirmar() {
@@ -47,6 +48,7 @@ export default function ModalComida({
       slug: comida.slug,
       fotoUrl: comida.fotoUrl,
       precoUnitario,
+      precoOriginalUnitario,
       quantidade,
       opcoes: opcoesSelecionadas,
     });

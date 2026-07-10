@@ -10,7 +10,8 @@ import {
 } from "@/lib/carrinho";
 
 export default function CarrinhoDrawer() {
-  const { itens, aberto, fecharCarrinho, removerItem, atualizarQuantidade } = useCarrinho();
+  const { itens, aberto, fecharCarrinho, removerItem, atualizarQuantidade, abrirCheckout } =
+    useCarrinho();
 
   if (!aberto) return null;
 
@@ -109,7 +110,10 @@ export default function CarrinhoDrawer() {
                 <span>{formatarPreco(total)}</span>
               </div>
             </div>
-            <button className="mt-4 w-full rounded-full bg-primaria py-3 font-semibold text-white transition hover:opacity-90">
+            <button
+              onClick={abrirCheckout}
+              className="mt-4 w-full rounded-full bg-primaria py-3 font-semibold text-white transition hover:opacity-90"
+            >
               Fechar pedido 🎉
             </button>
           </div>

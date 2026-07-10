@@ -5,14 +5,7 @@
  * motoboys), nunca para estado do jogador.
  */
 
-import type { ItemCarrinho } from "./tipos";
-
-export type Pedido = {
-  id: string;
-  item: string;
-  criadoEm: string;
-  status: "a_caminho" | "atrasado" | "cancelado";
-};
+import type { ItemCarrinho, PedidoSalvo } from "./tipos";
 
 export type Passaporte = {
   carimbos: string[];
@@ -49,8 +42,8 @@ function escrever<T>(chave: string, valor: T): void {
 }
 
 export const storage = {
-  getPedidos: () => ler<Pedido[]>(CHAVES.pedidos, []),
-  setPedidos: (pedidos: Pedido[]) => escrever(CHAVES.pedidos, pedidos),
+  getPedidos: () => ler<PedidoSalvo[]>(CHAVES.pedidos, []),
+  setPedidos: (pedidos: PedidoSalvo[]) => escrever(CHAVES.pedidos, pedidos),
 
   getAlbum: () => ler<string[]>(CHAVES.album, []),
   setAlbum: (figurinhas: string[]) => escrever(CHAVES.album, figurinhas),

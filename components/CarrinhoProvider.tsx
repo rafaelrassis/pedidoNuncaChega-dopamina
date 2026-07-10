@@ -2,8 +2,25 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { storage } from "@/lib/storage";
-import type { ItemCarrinho, OpcaoSelecionada } from "@/lib/tipos";
-import { gerarChaveOpcoes } from "@/lib/carrinho";
+import type { ItemCarrinho, MotoboyPublico, OpcaoSelecionada, PedidoSalvo } from "@/lib/tipos";
+import {
+  calcularEconomia,
+  calcularImpostos,
+  calcularSubtotal,
+  calcularTaxaEntrega,
+  gerarChaveOpcoes,
+  gerarIdPedido,
+} from "@/lib/carrinho";
+import { sortearMotoboy } from "@/lib/motoboys";
+
+const MOTOBOY_PADRAO: MotoboyPublico = {
+  id: "fallback",
+  nome: "Motoboy Misterioso",
+  avatarEmoji: "🏍️",
+  frase: "Sumiu no mapa, mas tá vindo",
+  raridade: "COMUM",
+  pesoSorteio: 1,
+};
 
 type NovoItemCarrinho = {
   comidaId: string;
@@ -11,6 +28,7 @@ type NovoItemCarrinho = {
   slug: string;
   fotoUrl: string;
   precoUnitario: number;
+  precoOriginalUnitario: number;
   quantidade: number;
   opcoes: OpcaoSelecionada[];
 };
@@ -24,6 +42,21 @@ type CarrinhoContextValor = {
   removerItem: (itemId: string) => void;
   atualizarQuantidade: (itemId: string, quantidade: number) => void;
   esvaziar: () => void;
+
+  enderecoIndice: number;
+  trocarEndereco: () => void;
+
+  checkoutAberto: boolean;
+  abrirCheckout: () => void;
+  fecharCheckout: () => void;
+
+  motoboys: MotoboyPublico[];
+  criarPedido: () => PedidoSalvo | null;
+
+  pedidoAtual: PedidoSalvo | null;
+  trackingAberto: boolean;
+  fecharTracking: () => void;
+  marcarPedidoEntregue: (id: string) => void;
 };
 
 const CarrinhoContext = createContext<CarrinhoContextValor | null>(null);
@@ -31,11 +64,22 @@ const CarrinhoContext = createContext<CarrinhoContextValor | null>(null);
 export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   const [itens, setItens] = useState<ItemCarrinho[]>([]);
   const [aberto, setAberto] = useState(false);
+  const [enderecoIndice, setEnderecoIndice] = useState(0);
+  const [checkoutAberto, setCheckoutAberto] = useState(false);
+  const [motoboys, setMotoboys] = useState<MotoboyPublico[]>([]);
+  const [pedidoAtual, setPedidoAtual] = useState<PedidoSalvo | null>(null);
+  const [trackingAberto, setTrackingAberto] = useState(false);
   const carregouRef = useRef(false);
 
   useEffect(() => {
     setItens(storage.getCarrinho());
+    setEnderecoIndice(storage.getEnderecoIndice());
     carregouRef.current = true;
+
+    fetch("/api/motoboys")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((dados) => setMotoboys(Array.isArray(dados) ? dados : []))
+      .catch(() => setMotoboys([]));
   }, []);
 
   useEffect(() => {
@@ -64,6 +108,7 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
           slug: novo.slug,
           fotoUrl: novo.fotoUrl,
           precoUnitario: novo.precoUnitario,
+          precoOriginalUnitario: novo.precoOriginalUnitario,
           quantidade: novo.quantidade,
           opcoes: novo.opcoes,
         },
@@ -88,6 +133,59 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
     setItens([]);
   }
 
+  function trocarEndereco() {
+    setEnderecoIndice((atual) => {
+      const proximo = (atual + 1) % 3;
+      storage.setEnderecoIndice(proximo);
+      return proximo;
+    });
+  }
+
+  function criarPedido(): PedidoSalvo | null {
+    if (itens.length === 0) return null;
+
+    const motoboy = motoboys.length > 0 ? sortearMotoboy(motoboys) : MOTOBOY_PADRAO;
+    const subtotal = calcularSubtotal(itens);
+    const economia = calcularEconomia(itens);
+    const entrega = calcularTaxaEntrega(subtotal);
+    const impostos = calcularImpostos(subtotal);
+    const total = subtotal + entrega + impostos;
+
+    const pedido: PedidoSalvo = {
+      id: gerarIdPedido(),
+      itens,
+      subtotal,
+      economia,
+      entrega,
+      impostos,
+      total,
+      criadoEm: new Date().toISOString(),
+      motoboy,
+      status: "a_caminho",
+    };
+
+    storage.setPedidos([...storage.getPedidos(), pedido]);
+    storage.incrementarContadorDesejos();
+    setItens([]);
+    setCheckoutAberto(false);
+    setPedidoAtual(pedido);
+    setTrackingAberto(true);
+
+    return pedido;
+  }
+
+  function fecharTracking() {
+    setTrackingAberto(false);
+    setPedidoAtual(null);
+  }
+
+  function marcarPedidoEntregue(id: string) {
+    setPedidoAtual((atual) => (atual && atual.id === id ? { ...atual, status: "entregue" } : atual));
+    storage.setPedidos(
+      storage.getPedidos().map((p) => (p.id === id ? { ...p, status: "entregue" as const } : p))
+    );
+  }
+
   return (
     <CarrinhoContext.Provider
       value={{
@@ -99,6 +197,24 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
         removerItem,
         atualizarQuantidade,
         esvaziar,
+
+        enderecoIndice,
+        trocarEndereco,
+
+        checkoutAberto,
+        abrirCheckout: () => {
+          setAberto(false);
+          setCheckoutAberto(true);
+        },
+        fecharCheckout: () => setCheckoutAberto(false),
+
+        motoboys,
+        criarPedido,
+
+        pedidoAtual,
+        trackingAberto,
+        fecharTracking,
+        marcarPedidoEntregue,
       }}
     >
       {children}
