@@ -7,12 +7,64 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Catálogo estático (ex: motoboys disponíveis para colecionar).
+enum Regiao {
+  NORDESTE
+  NORTE
+  SUDESTE
+  SUL
+  CENTRO_OESTE
+}
+
+enum Raridade {
+  COMUM
+  RARO
+  LENDARIO
+}
+
+// Conteúdo estático/catálogo compartilhado.
 // Progresso do jogador NUNCA entra aqui — ver lib/storage.ts.
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Comida {
+  id                String   @id @default(cuid())
+  nome              String
+  slug              String   @unique
+  regiao            Regiao
+  descricao         String
+  precoFake         Decimal
+  descontoPct       Int      @default(0)
+  avaliacaoFake     Decimal  @default(4.7)
+  numAvaliacoesFake Int      @default(1200)
+  tempoPreparoMin   Int      @default(25)
+  fotoUrl           String
+  vegetariano       Boolean  @default(false)
+  trending          Boolean  @default(false)
+  best              Boolean  @default(false)
+  opcoesJson        Json
+  receitaMd         String   @db.Text
+  ativo             Boolean  @default(true)
+}
+
 model Motoboy {
-  id        String   @id @default(cuid())
-  nome      String
-  imagemUrl String
-  raridade  String
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  nome         String
+  avatarEmoji  String
+  frase        String
+  raridade     Raridade
+  pesoSorteio  Int      @default(10)
+  ativo        Boolean  @default(true)
+}
+
+model Configuracao {
+  id                Int    @id @default(1)
+  chavePix          String
+  nomeRecebedor     String
+  cidadeRecebedor   String
+  tiersDoacaoJson   Json
+  textosJson        Json
 }
