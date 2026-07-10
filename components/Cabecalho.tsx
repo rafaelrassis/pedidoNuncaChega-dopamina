@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useCarrinho } from "./CarrinhoProvider";
 import { contarItens } from "@/lib/carrinho";
+import BotaoInstalarApp from "./BotaoInstalarApp";
 
 export default function Cabecalho() {
-  const { itens, abrirCarrinho } = useCarrinho();
+  const { itens, abrirCarrinho, streak } = useCarrinho();
   const totalItens = contarItens(itens);
 
   return (
@@ -27,17 +28,28 @@ export default function Cabecalho() {
           Doar
         </Link>
       </nav>
-      <button
-        onClick={abrirCarrinho}
-        className="relative rounded-full bg-primaria px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
-      >
-        🍱 Marmita
-        {totalItens > 0 && (
-          <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-destaque text-xs font-bold text-white">
-            {totalItens}
+      <div className="flex items-center gap-2">
+        {streak.dias > 0 && (
+          <span
+            title={`${streak.dias} dia${streak.dias === 1 ? "" : "s"} seguidos pedindo`}
+            className="flex items-center gap-1 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-bold shadow-sm"
+          >
+            🔥 {streak.dias} {streak.dias === 1 ? "dia" : "dias"}
           </span>
         )}
-      </button>
+        <BotaoInstalarApp />
+        <button
+          onClick={abrirCarrinho}
+          className="relative rounded-full bg-primaria px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90"
+        >
+          🍱 Marmita
+          {totalItens > 0 && (
+            <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-destaque text-xs font-bold text-white">
+              {totalItens}
+            </span>
+          )}
+        </button>
+      </div>
     </header>
   );
 }

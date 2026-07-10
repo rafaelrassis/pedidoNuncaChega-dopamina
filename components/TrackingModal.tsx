@@ -25,7 +25,20 @@ export default function TrackingModal() {
   const [duracaoTotal, setDuracaoTotal] = useState(DURACAO_INICIAL_SEGUNDOS);
   const [eventos, setEventos] = useState<EventoFeed[]>([]);
   const [toast, setToast] = useState<string | null>(null);
+  const [permissaoNotificacao, setPermissaoNotificacao] =
+    useState<NotificationPermission | null>(null);
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => {
+    if (!trackingAberto || !pedidoAtual) return;
+    if (typeof window === "undefined" || !("Notification" in window)) return;
+
+    setPermissaoNotificacao(Notification.permission);
+    if (Notification.permission === "default") {
+      Notification.requestPermission().then(setPermissaoNotificacao);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trackingAberto, pedidoAtual?.id]);
 
   useEffect(() => {
     if (!trackingAberto || !pedidoAtual) return;
@@ -89,6 +102,14 @@ export default function TrackingModal() {
 
   useEffect(() => {
     if (segundosRestantes === 0 && pedidoAtual && trackingAberto) {
+      if (typeof window !== "undefined" && "Notification" in window) {
+        if (Notification.permission === "granted") {
+          new Notification("Seu pedido \"chegou\"! 🎉", {
+            body: `Pedido #${pedidoAtual.id} — a comida nunca vem, mas a dopamina sim.`,
+            icon: "/icons/icon-192.png",
+          });
+        }
+      }
       marcarPedidoEntregue(pedidoAtual.id);
     }
   }, [segundosRestantes, pedidoAtual, trackingAberto, marcarPedidoEntregue]);
@@ -173,6 +194,11 @@ export default function TrackingModal() {
                 style={{ width: `${progresso * 100}%` }}
               />
             </div>
+            {permissaoNotificacao === "denied" && (
+              <p className="mt-1 text-xs text-foreground/40">
+                🔕 Notificações bloqueadas — ative pra saber quando o pedido &ldquo;chegar&rdquo;
+              </p>
+            )}
           </div>
 
           <div className="flex items-center gap-3 rounded-xl bg-fundo p-3">

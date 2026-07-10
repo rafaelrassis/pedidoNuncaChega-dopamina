@@ -13,8 +13,8 @@ const MOLDURA_POR_RARIDADE: Record<string, string> = {
 };
 
 export default function AlbumConteudo() {
-  const { motoboys, pedidos } = useCarrinho();
-  const album = calcularAlbum(pedidos);
+  const { motoboys, pedidos, figurinhasBonus, streak } = useCarrinho();
+  const album = calcularAlbum(pedidos, figurinhasBonus);
   const regioesColetadas = calcularRegioesColetadas(pedidos);
   const faltamRegioes = TODAS_REGIOES.length - regioesColetadas.size;
   const totalMotoboys = motoboys.length || 12;
@@ -75,8 +75,16 @@ export default function AlbumConteudo() {
         )}
       </div>
 
-      <div className="rounded-xl bg-white p-4 text-sm shadow-sm">
-        Você já fez <strong>{pedidos.length}</strong> pedido{pedidos.length === 1 ? "" : "s"}.
+      <div className="flex flex-col gap-1 rounded-xl bg-white p-4 text-sm shadow-sm">
+        <p>
+          Você já fez <strong>{pedidos.length}</strong> pedido{pedidos.length === 1 ? "" : "s"}.
+        </p>
+        {streak.dias > 0 && (
+          <p>
+            🔥 Ofensiva atual: <strong>{streak.dias}</strong>{" "}
+            {streak.dias === 1 ? "dia" : "dias"} seguidos.
+          </p>
+        )}
       </div>
 
       <Link href="/" className="self-start text-sm font-semibold text-primaria hover:underline">

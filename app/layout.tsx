@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
+import RegistrarServiceWorker from "@/components/RegistrarServiceWorker";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -18,6 +19,10 @@ export const metadata: Metadata = {
     "Delivery fake de comida brasileira: dopamina grátis, figurinhas de motoboys e pedidos que nunca chegam.",
 };
 
+export const viewport: Viewport = {
+  themeColor: "#E2574C",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,6 +32,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={`${bricolage.variable} ${inter.variable} font-body antialiased`}>
         {children}
+        <RegistrarServiceWorker />
       </body>
     </html>
   );

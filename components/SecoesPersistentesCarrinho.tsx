@@ -7,8 +7,8 @@ import { calcularRegioesColetadas } from "@/lib/passaporte";
 import { formatarPreco } from "@/lib/carrinho";
 
 export default function SecoesPersistentesCarrinho() {
-  const { pedidos, motoboys } = useCarrinho();
-  const album = calcularAlbum(pedidos);
+  const { pedidos, motoboys, figurinhasBonus } = useCarrinho();
+  const album = calcularAlbum(pedidos, figurinhasBonus);
   const regioesColetadas = calcularRegioesColetadas(pedidos);
   const pedidosRecentes = [...pedidos].reverse().slice(0, 5);
 

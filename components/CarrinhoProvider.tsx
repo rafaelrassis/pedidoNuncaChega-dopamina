@@ -3,7 +3,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { Regiao } from "@prisma/client";
 import { storage } from "@/lib/storage";
-import type { ItemCarrinho, MotoboyPublico, OpcaoSelecionada, PedidoSalvo } from "@/lib/tipos";
+import type {
+  ItemCarrinho,
+  MotoboyPublico,
+  OpcaoSelecionada,
+  PedidoSalvo,
+  Streak,
+} from "@/lib/tipos";
 import {
   calcularEconomia,
   calcularImpostos,
@@ -13,6 +19,9 @@ import {
   gerarIdPedido,
 } from "@/lib/carrinho";
 import { sortearMotoboy } from "@/lib/motoboys";
+import { atualizarStreak, ganhouBonusHoje } from "@/lib/streak";
+
+const STREAK_PADRAO: Streak = { dias: 0, ultimaData: null };
 
 const MOTOBOY_PADRAO: MotoboyPublico = {
   id: "fallback",
@@ -63,6 +72,10 @@ type CarrinhoContextValor = {
 
   entregaAberta: boolean;
   fecharEntrega: () => void;
+
+  streak: Streak;
+  figurinhasBonus: MotoboyPublico[];
+  figurinhaBonusRecebida: MotoboyPublico | null;
 };
 
 const CarrinhoContext = createContext<CarrinhoContextValor | null>(null);
@@ -77,12 +90,19 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   const [pedidoAtual, setPedidoAtual] = useState<PedidoSalvo | null>(null);
   const [trackingAberto, setTrackingAberto] = useState(false);
   const [entregaAberta, setEntregaAberta] = useState(false);
+  const [streak, setStreak] = useState<Streak>(STREAK_PADRAO);
+  const [figurinhasBonus, setFigurinhasBonus] = useState<MotoboyPublico[]>([]);
+  const [figurinhaBonusRecebida, setFigurinhaBonusRecebida] = useState<MotoboyPublico | null>(
+    null
+  );
   const [carregado, setCarregado] = useState(false);
 
   useEffect(() => {
     setItens(storage.getCarrinho());
     setEnderecoIndice(storage.getEnderecoIndice());
     setPedidos(storage.getPedidos());
+    setStreak(storage.getStreak());
+    setFigurinhasBonus(storage.getFigurinhasBonus());
     setCarregado(true);
 
     fetch("/api/motoboys")
@@ -98,6 +118,14 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (carregado) storage.setPedidos(pedidos);
   }, [pedidos, carregado]);
+
+  useEffect(() => {
+    if (carregado) storage.setStreak(streak);
+  }, [streak, carregado]);
+
+  useEffect(() => {
+    if (carregado) storage.setFigurinhasBonus(figurinhasBonus);
+  }, [figurinhasBonus, carregado]);
 
   function adicionarItem(novo: NovoItemCarrinho) {
     const chaveNova = gerarChaveOpcoes(novo.opcoes);
@@ -180,6 +208,18 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
 
     setPedidos((atual) => [...atual, pedido]);
     storage.incrementarContadorDesejos();
+
+    const streakAntigo = streak;
+    const streakNovo = atualizarStreak(streakAntigo);
+    setStreak(streakNovo);
+
+    setFigurinhaBonusRecebida(null);
+    if (ganhouBonusHoje(streakAntigo, streakNovo) && motoboys.length > 0) {
+      const bonus = sortearMotoboy(motoboys);
+      setFigurinhasBonus((atual) => [...atual, bonus]);
+      setFigurinhaBonusRecebida(bonus);
+    }
+
     setItens([]);
     setCheckoutAberto(false);
     setPedidoAtual(pedido);
@@ -241,6 +281,10 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
 
         entregaAberta,
         fecharEntrega,
+
+        streak,
+        figurinhasBonus,
+        figurinhaBonusRecebida,
       }}
     >
       {children}

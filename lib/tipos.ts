@@ -60,6 +60,11 @@ export type MotoboyPublico = {
   pesoSorteio: number;
 };
 
+export type Streak = {
+  dias: number;
+  ultimaData: string | null;
+};
+
 export type StatusPedido = "a_caminho" | "entregue";
 
 export type PedidoSalvo = {

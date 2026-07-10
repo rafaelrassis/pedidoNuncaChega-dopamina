@@ -22,7 +22,15 @@ const MOLDURA_POR_RARIDADE: Record<string, string> = {
 };
 
 export default function ModalEntrega() {
-  const { pedidoAtual, entregaAberta, fecharEntrega, pedidos, motoboys } = useCarrinho();
+  const {
+    pedidoAtual,
+    entregaAberta,
+    fecharEntrega,
+    pedidos,
+    motoboys,
+    figurinhasBonus,
+    figurinhaBonusRecebida,
+  } = useCarrinho();
   const [virada, setVirada] = useState(false);
 
   useEffect(() => {
@@ -34,7 +42,10 @@ export default function ModalEntrega() {
     return () => clearTimeout(timer);
   }, [entregaAberta, pedidoAtual?.id]);
 
-  const album = useMemo(() => calcularAlbum(pedidos), [pedidos]);
+  const album = useMemo(
+    () => calcularAlbum(pedidos, figurinhasBonus),
+    [pedidos, figurinhasBonus]
+  );
   const regioesColetadas = useMemo(() => calcularRegioesColetadas(pedidos), [pedidos]);
 
   if (!entregaAberta || !pedidoAtual) return null;
@@ -131,6 +142,12 @@ export default function ModalEntrega() {
             {virada && repetida && (
               <p className="text-sm font-semibold text-foreground/60">
                 Repetida! Cola no álbum do bafo 😅
+              </p>
+            )}
+            {virada && figurinhaBonusRecebida && (
+              <p className="rounded-xl bg-destaque/10 px-3 py-2 text-sm font-semibold text-destaque">
+                🔥 Ofensiva de 7 dias! Figurinha bônus: {figurinhaBonusRecebida.avatarEmoji}{" "}
+                {figurinhaBonusRecebida.nome}
               </p>
             )}
           </div>

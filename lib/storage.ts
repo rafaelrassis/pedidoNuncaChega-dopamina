@@ -5,16 +5,12 @@
  * motoboys), nunca para estado do jogador.
  */
 
-import type { ItemCarrinho, PedidoSalvo } from "./tipos";
-
-export type Streak = {
-  dias: number;
-  ultimaData: string | null;
-};
+import type { ItemCarrinho, MotoboyPublico, PedidoSalvo, Streak } from "./tipos";
 
 const CHAVES = {
   pedidos: "pnc:pedidos",
   streak: "pnc:streak",
+  figurinhasBonus: "pnc:figurinhasBonus",
   carrinho: "pnc:carrinho",
   enderecoIndice: "pnc:enderecoIndice",
   contadorDesejos: "pnc:contadorDesejos",
@@ -41,6 +37,10 @@ export const storage = {
 
   getStreak: () => ler<Streak>(CHAVES.streak, { dias: 0, ultimaData: null }),
   setStreak: (streak: Streak) => escrever(CHAVES.streak, streak),
+
+  getFigurinhasBonus: () => ler<MotoboyPublico[]>(CHAVES.figurinhasBonus, []),
+  setFigurinhasBonus: (figurinhas: MotoboyPublico[]) =>
+    escrever(CHAVES.figurinhasBonus, figurinhas),
 
   getCarrinho: () => ler<ItemCarrinho[]>(CHAVES.carrinho, []),
   setCarrinho: (itens: ItemCarrinho[]) => escrever(CHAVES.carrinho, itens),
