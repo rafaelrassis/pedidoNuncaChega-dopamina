@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import LayoutPublico from "@/components/LayoutPublico";
 import DoacaoCard from "@/components/DoacaoCard";
+
+export const metadata: Metadata = {
+  title: "Apoiar o site",
+  description:
+    "Gostou da entrega que não veio? Apoie o PedidoNuncaChega com uma doação real via PIX — 100% opcional, nunca dá vantagem no jogo.",
+};
 
 export default function DoarPage() {
   return (

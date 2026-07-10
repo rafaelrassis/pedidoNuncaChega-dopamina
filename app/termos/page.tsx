@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import LayoutPublico from "@/components/LayoutPublico";
+
+export const metadata: Metadata = {
+  title: "Termos de uso",
+  description:
+    "Regras simples do PedidoNuncaChega: é entretenimento, é grátis, e doação nunca dá vantagem no jogo.",
+};
 
 export default function TermosPage() {
   return (

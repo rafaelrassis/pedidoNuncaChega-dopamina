@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import LayoutPublico from "@/components/LayoutPublico";
+
+export const metadata: Metadata = {
+  title: "Contato",
+  description: "Fale com o time do PedidoNuncaChega.",
+};
 
 export default function ContatoPage() {
   return (

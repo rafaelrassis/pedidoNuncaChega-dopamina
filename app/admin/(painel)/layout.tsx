@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import BotaoSair from "@/components/admin/BotaoSair";
+
+export const metadata: Metadata = {
+  title: "Admin",
+  robots: { index: false, follow: false },
+};
 
 export default function LayoutPainelAdmin({
   children,

@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import LayoutPublico from "@/components/LayoutPublico";
+
+export const metadata: Metadata = {
+  title: "Privacidade",
+  description:
+    "Sem contas, sem login: seus dados de jogo ficam só no seu navegador. Veja como o PedidoNuncaChega trata sua privacidade.",
+};
 
 export default function PrivacidadePage() {
   return (

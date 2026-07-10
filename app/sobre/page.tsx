@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import LayoutPublico from "@/components/LayoutPublico";
+
+export const metadata: Metadata = {
+  title: "Sobre",
+  description:
+    "O que é o PedidoNuncaChega, é golpe, é grátis mesmo, e de onde vem o dinheiro — tudo explicado.",
+};
 
 const FAQ = [
   {
