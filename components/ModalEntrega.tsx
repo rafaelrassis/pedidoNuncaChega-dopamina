@@ -6,6 +6,7 @@ import { formatarPreco } from "@/lib/carrinho";
 import { calcularAlbum } from "@/lib/album";
 import { calcularRegioesColetadas, TODAS_REGIOES } from "@/lib/passaporte";
 import { REGIOES_INFO } from "@/lib/regioes";
+import DoacaoCard from "./DoacaoCard";
 
 const RARIDADE_ROTULO: Record<string, string> = {
   COMUM: "comum",
@@ -133,6 +134,8 @@ export default function ModalEntrega() {
               </p>
             )}
           </div>
+
+          <DoacaoCard colapsavel />
 
           <div>
             <h3 className="mb-2 text-left font-display text-base font-bold">

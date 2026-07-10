@@ -23,9 +23,9 @@ export default function Cabecalho() {
         <Link href="/sobre" className="hover:text-primaria">
           Sobre
         </Link>
-        <a href="#doar" className="hover:text-primaria">
+        <Link href="/doar" className="hover:text-primaria">
           Doar
-        </a>
+        </Link>
       </nav>
       <button
         onClick={abrirCarrinho}
