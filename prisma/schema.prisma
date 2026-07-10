@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Catálogo estático (ex: motoboys disponíveis para colecionar).
+// Progresso do jogador NUNCA entra aqui — ver lib/storage.ts.
+model Motoboy {
+  id        String   @id @default(cuid())
+  nome      String
+  imagemUrl String
+  raridade  String
+  createdAt DateTime @default(now())
+}
