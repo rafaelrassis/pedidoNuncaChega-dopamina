@@ -30,6 +30,7 @@ export default function ModalEntrega() {
     motoboys,
     figurinhasBonus,
     figurinhaBonusRecebida,
+    conquistasNovas,
   } = useCarrinho();
   const [virada, setVirada] = useState(false);
 
@@ -192,6 +193,24 @@ export default function ModalEntrega() {
           <p className="text-xs text-foreground/50">
             🃏 Álbum: {album.size}/{totalMotoboys} motoboys coletados
           </p>
+
+          {conquistasNovas.length > 0 && (
+            <div className="flex flex-col gap-2 rounded-xl border border-destaque/30 bg-destaque/10 p-4">
+              <h3 className="font-display text-sm font-bold text-destaque">
+                🏅 Conquista{conquistasNovas.length > 1 ? "s" : ""} desbloqueada
+                {conquistasNovas.length > 1 ? "s" : ""}!
+              </h3>
+              {conquistasNovas.map((c) => (
+                <div key={c.id} className="flex items-center gap-2 text-left">
+                  <span className="text-2xl">{c.emoji}</span>
+                  <div>
+                    <p className="text-sm font-bold">{c.nome}</p>
+                    <p className="text-xs text-foreground/60">{c.descricao}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="flex flex-col gap-2">
             <button

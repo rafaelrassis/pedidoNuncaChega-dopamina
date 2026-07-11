@@ -20,6 +20,9 @@ import {
 } from "@/lib/carrinho";
 import { sortearMotoboy } from "@/lib/motoboys";
 import { atualizarStreak, ganhouBonusHoje } from "@/lib/streak";
+import { calcularAlbum } from "@/lib/album";
+import { calcularRegioesColetadas } from "@/lib/passaporte";
+import { calcularConquistas, type Conquista } from "@/lib/conquistas";
 
 const STREAK_PADRAO: Streak = { dias: 0, ultimaData: null };
 
@@ -67,6 +70,8 @@ type CarrinhoContextValor = {
   streak: Streak;
   figurinhasBonus: MotoboyPublico[];
   figurinhaBonusRecebida: MotoboyPublico | null;
+
+  conquistasNovas: Conquista[];
 };
 
 const CarrinhoContext = createContext<CarrinhoContextValor | null>(null);
@@ -86,6 +91,7 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   const [figurinhaBonusRecebida, setFigurinhaBonusRecebida] = useState<MotoboyPublico | null>(
     null
   );
+  const [conquistasNovas, setConquistasNovas] = useState<Conquista[]>([]);
   const [carregado, setCarregado] = useState(false);
 
   useEffect(() => {
@@ -177,6 +183,16 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   function criarPedido(): PedidoSalvo | null {
     if (itens.length === 0) return null;
 
+    const albumAntigo = calcularAlbum(pedidos, figurinhasBonus);
+    const regioesAntigo = calcularRegioesColetadas(pedidos);
+    const conquistasAntigas = calcularConquistas(
+      pedidos,
+      albumAntigo,
+      motoboys.length,
+      regioesAntigo,
+      streak
+    );
+
     const motoboy = sortearMotoboy(motoboys);
     const subtotal = calcularSubtotal(itens);
     const economia = calcularEconomia(itens);
@@ -197,7 +213,8 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
       status: "a_caminho",
     };
 
-    setPedidos((atual) => [...atual, pedido]);
+    const pedidosNovo = [...pedidos, pedido];
+    setPedidos(pedidosNovo);
     storage.incrementarContadorDesejos();
 
     const streakAntigo = streak;
@@ -205,11 +222,29 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
     setStreak(streakNovo);
 
     setFigurinhaBonusRecebida(null);
+    let figurinhasBonusNovo = figurinhasBonus;
     if (ganhouBonusHoje(streakAntigo, streakNovo) && motoboys.length > 0) {
       const bonus = sortearMotoboy(motoboys);
-      setFigurinhasBonus((atual) => [...atual, bonus]);
+      figurinhasBonusNovo = [...figurinhasBonus, bonus];
+      setFigurinhasBonus(figurinhasBonusNovo);
       setFigurinhaBonusRecebida(bonus);
     }
+
+    const albumNovo = calcularAlbum(pedidosNovo, figurinhasBonusNovo);
+    const regioesNovo = calcularRegioesColetadas(pedidosNovo);
+    const conquistasNovasCalc = calcularConquistas(
+      pedidosNovo,
+      albumNovo,
+      motoboys.length,
+      regioesNovo,
+      streakNovo
+    );
+    const idsJaDesbloqueados = new Set(
+      conquistasAntigas.filter((c) => c.desbloqueada).map((c) => c.id)
+    );
+    setConquistasNovas(
+      conquistasNovasCalc.filter((c) => c.desbloqueada && !idsJaDesbloqueados.has(c.id))
+    );
 
     setItens([]);
     setCheckoutAberto(false);
@@ -276,6 +311,8 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
         streak,
         figurinhasBonus,
         figurinhaBonusRecebida,
+
+        conquistasNovas,
       }}
     >
       {children}

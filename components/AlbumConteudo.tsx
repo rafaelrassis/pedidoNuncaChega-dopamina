@@ -5,6 +5,7 @@ import { useCarrinho } from "./CarrinhoProvider";
 import { calcularAlbum } from "@/lib/album";
 import { calcularRegioesColetadas, TODAS_REGIOES } from "@/lib/passaporte";
 import { REGIOES_INFO } from "@/lib/regioes";
+import { calcularConquistas } from "@/lib/conquistas";
 
 const MOLDURA_POR_RARIDADE: Record<string, string> = {
   COMUM: "border-black/10 bg-white",
@@ -18,6 +19,14 @@ export default function AlbumConteudo() {
   const regioesColetadas = calcularRegioesColetadas(pedidos);
   const faltamRegioes = TODAS_REGIOES.length - regioesColetadas.size;
   const totalMotoboys = motoboys.length || 12;
+  const conquistas = calcularConquistas(
+    pedidos,
+    album,
+    motoboys.length,
+    regioesColetadas,
+    streak
+  );
+  const totalDesbloqueadas = conquistas.filter((c) => c.desbloqueada).length;
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-10 px-6 py-10">
@@ -73,6 +82,30 @@ export default function AlbumConteudo() {
         ) : (
           <p className="mt-2 text-sm font-semibold text-destaque">Passaporte completo! 🇧🇷</p>
         )}
+      </div>
+
+      <div>
+        <h2 className="font-display text-xl font-bold">
+          🏅 Conquistas · {totalDesbloqueadas}/{conquistas.length}
+        </h2>
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {conquistas.map((c) => (
+            <div
+              key={c.id}
+              className={`flex flex-col items-center gap-1 rounded-2xl border p-4 text-center ${
+                c.desbloqueada
+                  ? "border-destaque/30 bg-destaque/10"
+                  : "border-black/5 bg-black/5"
+              }`}
+            >
+              <span className="text-3xl">{c.desbloqueada ? c.emoji : "❓"}</span>
+              <span className="text-xs font-semibold">{c.desbloqueada ? c.nome : "???"}</span>
+              {c.desbloqueada && (
+                <span className="text-[10px] text-foreground/50">{c.descricao}</span>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="flex flex-col gap-1 rounded-xl bg-white p-4 text-sm shadow-sm">
