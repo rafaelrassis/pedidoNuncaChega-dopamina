@@ -23,15 +23,6 @@ import { atualizarStreak, ganhouBonusHoje } from "@/lib/streak";
 
 const STREAK_PADRAO: Streak = { dias: 0, ultimaData: null };
 
-const MOTOBOY_PADRAO: MotoboyPublico = {
-  id: "fallback",
-  nome: "Motoboy Misterioso",
-  avatarEmoji: "🏍️",
-  frase: "Sumiu no mapa, mas tá vindo",
-  raridade: "COMUM",
-  pesoSorteio: 1,
-};
-
 type NovoItemCarrinho = {
   comidaId: string;
   nome: string;
@@ -186,7 +177,7 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   function criarPedido(): PedidoSalvo | null {
     if (itens.length === 0) return null;
 
-    const motoboy = motoboys.length > 0 ? sortearMotoboy(motoboys) : MOTOBOY_PADRAO;
+    const motoboy = sortearMotoboy(motoboys);
     const subtotal = calcularSubtotal(itens);
     const economia = calcularEconomia(itens);
     const entrega = calcularTaxaEntrega(subtotal);
