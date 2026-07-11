@@ -62,4 +62,5 @@ export const storage = {
     escrever(CHAVES.contadorDesejos, novo);
     return novo;
   },
+  setContadorDesejos: (valor: number): void => escrever(CHAVES.contadorDesejos, valor),
 };

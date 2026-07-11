@@ -6,6 +6,7 @@ import { calcularAlbum } from "@/lib/album";
 import { calcularRegioesColetadas, TODAS_REGIOES } from "@/lib/passaporte";
 import { REGIOES_INFO } from "@/lib/regioes";
 import { calcularConquistas } from "@/lib/conquistas";
+import BackupProgresso from "./BackupProgresso";
 
 const MOLDURA_POR_RARIDADE: Record<string, string> = {
   COMUM: "border-black/10 bg-white",
@@ -119,6 +120,8 @@ export default function AlbumConteudo() {
           </p>
         )}
       </div>
+
+      <BackupProgresso />
 
       <Link href="/" className="self-start text-sm font-semibold text-primaria hover:underline">
         ← Voltar pro cardápio
