@@ -23,6 +23,7 @@ import { atualizarStreak, ganhouBonusHoje } from "@/lib/streak";
 import { calcularAlbum } from "@/lib/album";
 import { calcularRegioesColetadas } from "@/lib/passaporte";
 import { calcularConquistas, type Conquista } from "@/lib/conquistas";
+import type { ComidaElegivel } from "@/lib/pratoDoDia";
 import {
   type RepetidasConsumidas,
   consumirRepetidas,
@@ -63,6 +64,7 @@ type CarrinhoContextValor = {
   fecharCheckout: () => void;
 
   motoboys: MotoboyPublico[];
+  comidasCatalogo: ComidaElegivel[];
   pedidos: PedidoSalvo[];
   criarPedido: () => PedidoSalvo | null;
 
@@ -96,6 +98,7 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   const [enderecoIndice, setEnderecoIndice] = useState(0);
   const [checkoutAberto, setCheckoutAberto] = useState(false);
   const [motoboys, setMotoboys] = useState<MotoboyPublico[]>([]);
+  const [comidasCatalogo, setComidasCatalogo] = useState<ComidaElegivel[]>([]);
   const [pedidos, setPedidos] = useState<PedidoSalvo[]>([]);
   const [pedidoAtual, setPedidoAtual] = useState<PedidoSalvo | null>(null);
   const [trackingAberto, setTrackingAberto] = useState(false);
@@ -124,6 +127,11 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
       .then((res) => (res.ok ? res.json() : []))
       .then((dados) => setMotoboys(Array.isArray(dados) ? dados : []))
       .catch(() => setMotoboys([]));
+
+    fetch("/api/comidas")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((dados) => setComidasCatalogo(Array.isArray(dados) ? dados : []))
+      .catch(() => setComidasCatalogo([]));
   }, []);
 
   useEffect(() => {
@@ -212,7 +220,8 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
       albumAntigo,
       motoboys.length,
       regioesAntigo,
-      streak
+      streak,
+      comidasCatalogo
     );
 
     const motoboy = sortearMotoboy(motoboys);
@@ -259,7 +268,8 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
       albumNovo,
       motoboys.length,
       regioesNovo,
-      streakNovo
+      streakNovo,
+      comidasCatalogo
     );
     const idsJaDesbloqueados = new Set(
       conquistasAntigas.filter((c) => c.desbloqueada).map((c) => c.id)
@@ -346,6 +356,7 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
         fecharCheckout: () => setCheckoutAberto(false),
 
         motoboys,
+        comidasCatalogo,
         pedidos,
         criarPedido,
 

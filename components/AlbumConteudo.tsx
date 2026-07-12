@@ -17,8 +17,15 @@ const MOLDURA_POR_RARIDADE: Record<string, string> = {
 };
 
 export default function AlbumConteudo() {
-  const { motoboys, pedidos, figurinhasBonus, streak, repetidasDisponiveis, trocarRepetidas } =
-    useCarrinho();
+  const {
+    motoboys,
+    comidasCatalogo,
+    pedidos,
+    figurinhasBonus,
+    streak,
+    repetidasDisponiveis,
+    trocarRepetidas,
+  } = useCarrinho();
   const album = calcularAlbum(pedidos, figurinhasBonus);
   const regioesColetadas = calcularRegioesColetadas(pedidos);
   const faltamRegioes = TODAS_REGIOES.length - regioesColetadas.size;
@@ -28,7 +35,8 @@ export default function AlbumConteudo() {
     album,
     motoboys.length,
     regioesColetadas,
-    streak
+    streak,
+    comidasCatalogo
   );
   const totalDesbloqueadas = conquistas.filter((c) => c.desbloqueada).length;
 

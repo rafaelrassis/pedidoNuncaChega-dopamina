@@ -1,8 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Regiao } from "@prisma/client";
 import type { ComidaCliente } from "@/lib/tipos";
+import { escolherPratoDoDia } from "@/lib/pratoDoDia";
+import { formatarPreco } from "@/lib/carrinho";
 import { CarrinhoProvider } from "./CarrinhoProvider";
 import Cabecalho from "./Cabecalho";
 import BarraContexto from "./BarraContexto";
@@ -22,6 +24,12 @@ export default function PaginaInicialCliente({ comidas }: { comidas: ComidaClien
   const [busca, setBusca] = useState("");
   const [regiao, setRegiao] = useState<Regiao | null>(null);
   const [comidaAberta, setComidaAberta] = useState<ComidaCliente | null>(null);
+  const [pratoDoDia, setPratoDoDia] = useState<ComidaCliente | null>(null);
+
+  useEffect(() => {
+    const dataISO = new Date().toISOString().slice(0, 10);
+    setPratoDoDia(escolherPratoDoDia(comidas, dataISO));
+  }, [comidas]);
 
   const comidasFiltradas = useMemo(() => {
     const termo = busca.trim().toLowerCase();
@@ -49,6 +57,31 @@ export default function PaginaInicialCliente({ comidas }: { comidas: ComidaClien
         </div>
 
         <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-10 px-6 py-8">
+          {pratoDoDia && (
+            <button
+              onClick={() => setComidaAberta(pratoDoDia)}
+              className="flex items-center gap-4 rounded-2xl bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-black/5">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={pratoDoDia.fotoUrl}
+                  alt={pratoDoDia.nome}
+                  className="h-full w-full object-cover text-transparent"
+                />
+              </div>
+              <div className="flex-1">
+                <span className="text-xs font-bold uppercase tracking-wide text-destaque">
+                  🍲 Desejo do dia
+                </span>
+                <h2 className="font-display text-lg font-bold">{pratoDoDia.nome}</h2>
+                <p className="text-sm text-foreground/60">
+                  {formatarPreco(pratoDoDia.precoFake * (1 - pratoDoDia.descontoPct / 100))}
+                </p>
+              </div>
+            </button>
+          )}
+
           {bombando.length > 0 && (
             <section>
               <h2 className="mb-4 font-display text-xl font-bold">🔥 Bombando agora</h2>

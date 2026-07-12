@@ -1,6 +1,7 @@
 import type { Regiao } from "@prisma/client";
 import type { EntradaAlbum } from "./album";
 import type { PedidoSalvo, Streak } from "./tipos";
+import { escolherPratoDoDia, type ComidaElegivel } from "./pratoDoDia";
 
 export type Conquista = {
   id: string;
@@ -24,6 +25,7 @@ type ContextoConquistas = {
   totalMotoboys: number;
   regioesColetadas: Set<Regiao>;
   streak: Streak;
+  comidas: ComidaElegivel[];
 };
 
 function contarPedidosPorComida(pedidos: PedidoSalvo[]): Map<string, number> {
@@ -114,6 +116,18 @@ const DEFINICOES: DefinicaoConquista[] = [
     descricao: "Avaliou 5 entregas que nunca aconteceram.",
     condicao: ({ pedidos }) => pedidos.filter((p) => p.avaliacao !== undefined).length >= 5,
   },
+  {
+    id: "cacador-de-ofertas",
+    emoji: "🎯",
+    nome: "Caçador de ofertas",
+    descricao: "Pediu o prato do dia no dia certo.",
+    condicao: ({ pedidos, comidas }) =>
+      pedidos.some((pedido) => {
+        const dataISO = pedido.criadoEm.slice(0, 10);
+        const prato = escolherPratoDoDia(comidas, dataISO);
+        return prato !== null && pedido.itens.some((item) => item.comidaId === prato.id);
+      }),
+  },
 ];
 
 export function calcularConquistas(
@@ -121,9 +135,17 @@ export function calcularConquistas(
   album: Map<string, EntradaAlbum>,
   totalMotoboys: number,
   regioesColetadas: Set<Regiao>,
-  streak: Streak
+  streak: Streak,
+  comidas: ComidaElegivel[] = []
 ): Conquista[] {
-  const ctx: ContextoConquistas = { pedidos, album, totalMotoboys, regioesColetadas, streak };
+  const ctx: ContextoConquistas = {
+    pedidos,
+    album,
+    totalMotoboys,
+    regioesColetadas,
+    streak,
+    comidas,
+  };
   return DEFINICOES.map((def) => ({
     id: def.id,
     emoji: def.emoji,

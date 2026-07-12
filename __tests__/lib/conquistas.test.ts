@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { Regiao } from "@prisma/client";
 import { calcularConquistas } from "@/lib/conquistas";
 import { calcularAlbum } from "@/lib/album";
+import { escolherPratoDoDia } from "@/lib/pratoDoDia";
 import { TODAS_REGIOES } from "@/lib/passaporte";
 import { criarItemCarrinho, criarMotoboy, criarPedido } from "../fixtures";
 import type { Streak } from "@/lib/tipos";
@@ -13,10 +14,11 @@ function idsDesbloqueadas(
   totalMotoboys = 12,
   regioes: Set<Regiao> = new Set(),
   streak = STREAK_ZERO,
-  bonus: Parameters<typeof calcularAlbum>[1] = []
+  bonus: Parameters<typeof calcularAlbum>[1] = [],
+  comidas: Parameters<typeof calcularConquistas>[5] = []
 ) {
   const album = calcularAlbum(pedidos, bonus);
-  return calcularConquistas(pedidos, album, totalMotoboys, regioes, streak)
+  return calcularConquistas(pedidos, album, totalMotoboys, regioes, streak, comidas)
     .filter((c) => c.desbloqueada)
     .map((c) => c.id);
 }
@@ -149,5 +151,40 @@ describe("calcularConquistas", () => {
       criarPedido({ id: "p3" }),
     ];
     expect(idsDesbloqueadas(pedidos)).not.toContain("critico");
+  });
+
+  it("cacador-de-ofertas desbloqueia ao pedir o prato do dia na data certa", () => {
+    const comidas = [{ id: "a" }, { id: "b" }, { id: "c" }];
+    const dataISO = "2026-07-10";
+    const prato = escolherPratoDoDia(comidas, dataISO)!;
+    const pedido = criarPedido({
+      criadoEm: `${dataISO}T12:00:00.000Z`,
+      itens: [criarItemCarrinho({ comidaId: prato.id })],
+    });
+    expect(idsDesbloqueadas([pedido], 12, new Set(), STREAK_ZERO, [], comidas)).toContain(
+      "cacador-de-ofertas"
+    );
+  });
+
+  it("cacador-de-ofertas não desbloqueia pedindo um prato diferente do dia", () => {
+    const comidas = [{ id: "a" }, { id: "b" }, { id: "c" }];
+    const dataISO = "2026-07-10";
+    const prato = escolherPratoDoDia(comidas, dataISO)!;
+    const outroId = comidas.find((c) => c.id !== prato.id)!.id;
+    const pedido = criarPedido({
+      criadoEm: `${dataISO}T12:00:00.000Z`,
+      itens: [criarItemCarrinho({ comidaId: outroId })],
+    });
+    expect(idsDesbloqueadas([pedido], 12, new Set(), STREAK_ZERO, [], comidas)).not.toContain(
+      "cacador-de-ofertas"
+    );
+  });
+
+  it("cacador-de-ofertas não desbloqueia sem catálogo de comidas", () => {
+    const pedido = criarPedido({
+      criadoEm: "2026-07-10T12:00:00.000Z",
+      itens: [criarItemCarrinho({ comidaId: "qualquer" })],
+    });
+    expect(idsDesbloqueadas([pedido])).not.toContain("cacador-de-ofertas");
   });
 });
