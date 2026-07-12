@@ -6,6 +6,7 @@ import { formatarPreco } from "@/lib/carrinho";
 import { calcularAlbum } from "@/lib/album";
 import { calcularRegioesColetadas, TODAS_REGIOES } from "@/lib/passaporte";
 import { REGIOES_INFO } from "@/lib/regioes";
+import { textoAvaliacao } from "@/lib/avaliacoes";
 import DoacaoCard from "./DoacaoCard";
 
 const RARIDADE_ROTULO: Record<string, string> = {
@@ -31,6 +32,7 @@ export default function ModalEntrega() {
     figurinhasBonus,
     figurinhaBonusRecebida,
     conquistasNovas,
+    avaliarPedido,
   } = useCarrinho();
   const [virada, setVirada] = useState(false);
 
@@ -194,6 +196,29 @@ export default function ModalEntrega() {
           <p className="text-xs text-foreground/50">
             🃏 Álbum: {album.size}/{totalMotoboys} motoboys coletados
           </p>
+
+          <div className="rounded-xl bg-fundo p-4">
+            <h3 className="mb-2 font-display text-sm font-bold">
+              ⭐ Avalie a entrega que não houve
+            </h3>
+            <div className="flex justify-center gap-1 text-3xl">
+              {[1, 2, 3, 4, 5].map((nota) => (
+                <button
+                  key={nota}
+                  onClick={() => avaliarPedido(pedidoAtual.id, nota)}
+                  aria-label={`${nota} estrela${nota > 1 ? "s" : ""}`}
+                  className="transition hover:scale-110"
+                >
+                  {(pedidoAtual.avaliacao ?? 0) >= nota ? "⭐" : "☆"}
+                </button>
+              ))}
+            </div>
+            {pedidoAtual.avaliacao && (
+              <p className="mt-2 text-center text-sm text-foreground/70">
+                {textoAvaliacao(pedidoAtual.avaliacao)}
+              </p>
+            )}
+          </div>
 
           {conquistasNovas.length > 0 && (
             <div className="flex flex-col gap-2 rounded-xl border border-destaque/30 bg-destaque/10 p-4">

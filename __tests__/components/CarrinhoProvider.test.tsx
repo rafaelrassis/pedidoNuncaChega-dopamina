@@ -112,6 +112,22 @@ describe("CarrinhoProvider", () => {
     expect(result.current.pedidoAtual?.id).toBe(pedido!.id);
   });
 
+  it("avaliarPedido grava a nota no pedido atual e na lista de pedidos", async () => {
+    const { result } = renderHook(() => useCarrinho(), { wrapper: CarrinhoProvider });
+    await waitFor(() => expect(result.current.motoboys.length).toBeGreaterThan(0));
+
+    act(() => result.current.adicionarItem(itemBase));
+    let pedido;
+    act(() => {
+      pedido = result.current.criarPedido();
+    });
+
+    act(() => result.current.avaliarPedido(pedido!.id, 5));
+
+    expect(result.current.pedidoAtual?.avaliacao).toBe(5);
+    expect(result.current.pedidos[0].avaliacao).toBe(5);
+  });
+
   it("trocarRepetidas troca 5 repetidas por uma figurinha garantida raro/lendária", async () => {
     const comum = criarMotoboy({ id: "comum", raridade: "COMUM", pesoSorteio: 10 });
     const raro = criarMotoboy({ id: "raro", raridade: "RARO", pesoSorteio: 1 });

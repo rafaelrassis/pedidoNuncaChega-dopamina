@@ -134,4 +134,20 @@ describe("calcularConquistas", () => {
     );
     expect(ids).toContain("sortudo");
   });
+
+  it("critico desbloqueia ao avaliar 5 pedidos", () => {
+    const pedidos = Array.from({ length: 5 }, (_, i) =>
+      criarPedido({ id: `p${i}`, avaliacao: 3 })
+    );
+    expect(idsDesbloqueadas(pedidos)).toContain("critico");
+  });
+
+  it("critico não desbloqueia com menos de 5 pedidos avaliados", () => {
+    const pedidos = [
+      criarPedido({ id: "p1", avaliacao: 5 }),
+      criarPedido({ id: "p2", avaliacao: 5 }),
+      criarPedido({ id: "p3" }),
+    ];
+    expect(idsDesbloqueadas(pedidos)).not.toContain("critico");
+  });
 });

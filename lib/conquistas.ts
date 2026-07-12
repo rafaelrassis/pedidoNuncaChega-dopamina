@@ -107,6 +107,13 @@ const DEFINICOES: DefinicaoConquista[] = [
     condicao: ({ album }) =>
       [...album.values()].some((entrada) => entrada.motoboy.raridade === "LENDARIO"),
   },
+  {
+    id: "critico",
+    emoji: "⭐",
+    nome: "Crítico",
+    descricao: "Avaliou 5 entregas que nunca aconteceram.",
+    condicao: ({ pedidos }) => pedidos.filter((p) => p.avaliacao !== undefined).length >= 5,
+  },
 ];
 
 export function calcularConquistas(

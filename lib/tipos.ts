@@ -78,4 +78,5 @@ export type PedidoSalvo = {
   criadoEm: string;
   motoboy: MotoboyPublico;
   status: StatusPedido;
+  avaliacao?: number;
 };

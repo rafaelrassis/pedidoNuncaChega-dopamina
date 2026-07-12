@@ -42,6 +42,7 @@ const pedidoSalvoSchema = z.object({
   criadoEm: z.string(),
   motoboy: motoboyPublicoSchema,
   status: z.enum(["a_caminho", "entregue"]),
+  avaliacao: z.number().optional(),
 });
 
 const streakSchema = z.object({

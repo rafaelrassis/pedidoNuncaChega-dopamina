@@ -70,6 +70,7 @@ type CarrinhoContextValor = {
   trackingAberto: boolean;
   fecharTracking: () => void;
   marcarPedidoEntregue: (id: string) => void;
+  avaliarPedido: (id: string, nota: number) => void;
 
   entregaAberta: boolean;
   fecharEntrega: () => void;
@@ -295,6 +296,13 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
     setPedidoAtual(null);
   }
 
+  function avaliarPedido(id: string, nota: number) {
+    setPedidoAtual((atual) =>
+      atual && atual.id === id ? { ...atual, avaliacao: nota } : atual
+    );
+    setPedidos((atual) => atual.map((p) => (p.id === id ? { ...p, avaliacao: nota } : p)));
+  }
+
   const album = calcularAlbum(pedidos, figurinhasBonus);
   const repetidasDisponiveis = contarRepetidasDisponiveis(album, repetidasConsumidas);
 
@@ -345,6 +353,7 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
         trackingAberto,
         fecharTracking,
         marcarPedidoEntregue,
+        avaliarPedido,
 
         entregaAberta,
         fecharEntrega,
