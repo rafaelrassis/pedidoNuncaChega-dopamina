@@ -59,6 +59,7 @@ export const backupSchema = z.object({
   carrinho: z.array(itemCarrinhoSchema),
   enderecoIndice: z.number(),
   contadorDesejos: z.number(),
+  repetidasConsumidas: z.record(z.string(), z.number()).default({}),
 });
 
 export type BackupProgresso = z.infer<typeof backupSchema>;
@@ -74,6 +75,7 @@ export function exportarProgresso(): string {
     carrinho: storage.getCarrinho(),
     enderecoIndice: storage.getEnderecoIndice(),
     contadorDesejos: storage.getContadorDesejos(),
+    repetidasConsumidas: storage.getRepetidasConsumidas(),
   };
   return JSON.stringify(backup, null, 2);
 }
@@ -101,6 +103,7 @@ export function importarProgresso(json: string): ResultadoImportacao {
   storage.setCarrinho(backup.carrinho);
   storage.setEnderecoIndice(backup.enderecoIndice);
   storage.setContadorDesejos(backup.contadorDesejos);
+  storage.setRepetidasConsumidas(backup.repetidasConsumidas);
 
   return { sucesso: true };
 }

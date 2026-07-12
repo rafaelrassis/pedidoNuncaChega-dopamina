@@ -111,4 +111,45 @@ describe("CarrinhoProvider", () => {
     expect(result.current.checkoutAberto).toBe(false);
     expect(result.current.pedidoAtual?.id).toBe(pedido!.id);
   });
+
+  it("trocarRepetidas troca 5 repetidas por uma figurinha garantida raro/lendária", async () => {
+    const comum = criarMotoboy({ id: "comum", raridade: "COMUM", pesoSorteio: 10 });
+    const raro = criarMotoboy({ id: "raro", raridade: "RARO", pesoSorteio: 1 });
+    mockFetchMotoboys([comum, raro]);
+
+    const { result } = renderHook(() => useCarrinho(), { wrapper: CarrinhoProvider });
+    await waitFor(() => expect(result.current.motoboys.length).toBe(2));
+
+    const randomOriginal = Math.random;
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    for (let i = 0; i < 6; i++) {
+      act(() => result.current.adicionarItem(itemBase));
+      act(() => {
+        result.current.criarPedido();
+      });
+    }
+    Math.random = randomOriginal;
+
+    expect(result.current.repetidasDisponiveis).toBe(5);
+
+    act(() => result.current.trocarRepetidas());
+
+    expect(result.current.repetidasDisponiveis).toBe(0);
+    expect(result.current.trocaAberta).toBe(true);
+    expect(result.current.trocaRecebida?.id).toBe("raro");
+    expect(result.current.figurinhasBonus.map((f) => f.id)).toContain("raro");
+
+    act(() => result.current.fecharTroca());
+    expect(result.current.trocaAberta).toBe(false);
+  });
+
+  it("trocarRepetidas não faz nada com menos de 5 repetidas disponíveis", async () => {
+    const { result } = renderHook(() => useCarrinho(), { wrapper: CarrinhoProvider });
+    await waitFor(() => expect(result.current.motoboys.length).toBeGreaterThan(0));
+
+    act(() => result.current.trocarRepetidas());
+
+    expect(result.current.trocaAberta).toBe(false);
+    expect(result.current.trocaRecebida).toBeNull();
+  });
 });

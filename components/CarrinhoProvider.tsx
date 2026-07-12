@@ -23,6 +23,13 @@ import { atualizarStreak, ganhouBonusHoje } from "@/lib/streak";
 import { calcularAlbum } from "@/lib/album";
 import { calcularRegioesColetadas } from "@/lib/passaporte";
 import { calcularConquistas, type Conquista } from "@/lib/conquistas";
+import {
+  type RepetidasConsumidas,
+  consumirRepetidas,
+  contarRepetidasDisponiveis,
+  podeTrocar,
+  sortearTroca,
+} from "@/lib/troca";
 
 const STREAK_PADRAO: Streak = { dias: 0, ultimaData: null };
 
@@ -72,6 +79,12 @@ type CarrinhoContextValor = {
   figurinhaBonusRecebida: MotoboyPublico | null;
 
   conquistasNovas: Conquista[];
+
+  repetidasDisponiveis: number;
+  trocaAberta: boolean;
+  trocaRecebida: MotoboyPublico | null;
+  trocarRepetidas: () => void;
+  fecharTroca: () => void;
 };
 
 const CarrinhoContext = createContext<CarrinhoContextValor | null>(null);
@@ -92,6 +105,9 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
     null
   );
   const [conquistasNovas, setConquistasNovas] = useState<Conquista[]>([]);
+  const [repetidasConsumidas, setRepetidasConsumidas] = useState<RepetidasConsumidas>({});
+  const [trocaAberta, setTrocaAberta] = useState(false);
+  const [trocaRecebida, setTrocaRecebida] = useState<MotoboyPublico | null>(null);
   const [carregado, setCarregado] = useState(false);
 
   useEffect(() => {
@@ -100,6 +116,7 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
     setPedidos(storage.getPedidos());
     setStreak(storage.getStreak());
     setFigurinhasBonus(storage.getFigurinhasBonus());
+    setRepetidasConsumidas(storage.getRepetidasConsumidas());
     setCarregado(true);
 
     fetch("/api/motoboys")
@@ -123,6 +140,10 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (carregado) storage.setFigurinhasBonus(figurinhasBonus);
   }, [figurinhasBonus, carregado]);
+
+  useEffect(() => {
+    if (carregado) storage.setRepetidasConsumidas(repetidasConsumidas);
+  }, [repetidasConsumidas, carregado]);
 
   function adicionarItem(novo: NovoItemCarrinho) {
     const chaveNova = gerarChaveOpcoes(novo.opcoes);
@@ -274,6 +295,26 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
     setPedidoAtual(null);
   }
 
+  const album = calcularAlbum(pedidos, figurinhasBonus);
+  const repetidasDisponiveis = contarRepetidasDisponiveis(album, repetidasConsumidas);
+
+  function trocarRepetidas() {
+    if (!podeTrocar(album, repetidasConsumidas)) return;
+
+    const sorteado = sortearTroca(motoboys);
+    if (!sorteado) return;
+
+    setRepetidasConsumidas((atual) => consumirRepetidas(album, atual));
+    setFigurinhasBonus((atual) => [...atual, sorteado]);
+    setTrocaRecebida(sorteado);
+    setTrocaAberta(true);
+  }
+
+  function fecharTroca() {
+    setTrocaAberta(false);
+    setTrocaRecebida(null);
+  }
+
   return (
     <CarrinhoContext.Provider
       value={{
@@ -313,6 +354,12 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
         figurinhaBonusRecebida,
 
         conquistasNovas,
+
+        repetidasDisponiveis,
+        trocaAberta,
+        trocaRecebida,
+        trocarRepetidas,
+        fecharTroca,
       }}
     >
       {children}

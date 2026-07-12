@@ -14,6 +14,7 @@ describe("exportarProgresso / importarProgresso", () => {
     storage.setStreak({ dias: 3, ultimaData: "2026-07-10" });
     storage.setEnderecoIndice(1);
     storage.setContadorDesejos(45000);
+    storage.setRepetidasConsumidas({ "motoboy-1": 2 });
 
     const json = exportarProgresso();
 
@@ -27,6 +28,24 @@ describe("exportarProgresso / importarProgresso", () => {
     expect(storage.getStreak()).toEqual({ dias: 3, ultimaData: "2026-07-10" });
     expect(storage.getEnderecoIndice()).toBe(1);
     expect(storage.getContadorDesejos()).toBe(45000);
+    expect(storage.getRepetidasConsumidas()).toEqual({ "motoboy-1": 2 });
+  });
+
+  it("importa backup antigo sem repetidasConsumidas assumindo objeto vazio", () => {
+    const backupAntigo = {
+      versao: 1,
+      pedidos: [],
+      streak: { dias: 0, ultimaData: null },
+      figurinhasBonus: [],
+      carrinho: [],
+      enderecoIndice: 0,
+      contadorDesejos: 40000,
+    };
+
+    const resultado = importarProgresso(JSON.stringify(backupAntigo));
+
+    expect(resultado.sucesso).toBe(true);
+    expect(storage.getRepetidasConsumidas()).toEqual({});
   });
 
   it("importar JSON corrompido não altera o storage e retorna erro", () => {

@@ -6,7 +6,9 @@ import { calcularAlbum } from "@/lib/album";
 import { calcularRegioesColetadas, TODAS_REGIOES } from "@/lib/passaporte";
 import { REGIOES_INFO } from "@/lib/regioes";
 import { calcularConquistas } from "@/lib/conquistas";
+import { REPETIDAS_POR_TROCA } from "@/lib/troca";
 import BackupProgresso from "./BackupProgresso";
+import ModalTroca from "./ModalTroca";
 
 const MOLDURA_POR_RARIDADE: Record<string, string> = {
   COMUM: "border-black/10 bg-white",
@@ -15,7 +17,8 @@ const MOLDURA_POR_RARIDADE: Record<string, string> = {
 };
 
 export default function AlbumConteudo() {
-  const { motoboys, pedidos, figurinhasBonus, streak } = useCarrinho();
+  const { motoboys, pedidos, figurinhasBonus, streak, repetidasDisponiveis, trocarRepetidas } =
+    useCarrinho();
   const album = calcularAlbum(pedidos, figurinhasBonus);
   const regioesColetadas = calcularRegioesColetadas(pedidos);
   const faltamRegioes = TODAS_REGIOES.length - regioesColetadas.size;
@@ -52,6 +55,18 @@ export default function AlbumConteudo() {
               </div>
             );
           })}
+        </div>
+        <div className="mt-4 flex flex-col items-start gap-2 rounded-xl bg-white p-4 text-sm shadow-sm sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            🔄 Repetidas disponíveis: <strong>{repetidasDisponiveis}</strong>/{REPETIDAS_POR_TROCA}
+          </p>
+          <button
+            onClick={trocarRepetidas}
+            disabled={repetidasDisponiveis < REPETIDAS_POR_TROCA}
+            className="rounded-full bg-destaque px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:bg-black/10 disabled:text-foreground/40"
+          >
+            🔄 Trocar {REPETIDAS_POR_TROCA} repetidas
+          </button>
         </div>
       </div>
 
@@ -126,6 +141,8 @@ export default function AlbumConteudo() {
       <Link href="/" className="self-start text-sm font-semibold text-primaria hover:underline">
         ← Voltar pro cardápio
       </Link>
+
+      <ModalTroca />
     </main>
   );
 }

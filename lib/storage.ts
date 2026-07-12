@@ -6,6 +6,7 @@
  */
 
 import type { ItemCarrinho, MotoboyPublico, PedidoSalvo, Streak } from "./tipos";
+import type { RepetidasConsumidas } from "./troca";
 
 const CHAVES = {
   pedidos: "pnc:pedidos",
@@ -14,6 +15,7 @@ const CHAVES = {
   carrinho: "pnc:carrinho",
   enderecoIndice: "pnc:enderecoIndice",
   contadorDesejos: "pnc:contadorDesejos",
+  repetidasConsumidas: "pnc:repetidasConsumidas",
 } as const;
 
 function ler<T>(chave: string, valorPadrao: T): T {
@@ -63,4 +65,9 @@ export const storage = {
     return novo;
   },
   setContadorDesejos: (valor: number): void => escrever(CHAVES.contadorDesejos, valor),
+
+  getRepetidasConsumidas: () =>
+    ler<RepetidasConsumidas>(CHAVES.repetidasConsumidas, {}),
+  setRepetidasConsumidas: (valor: RepetidasConsumidas) =>
+    escrever(CHAVES.repetidasConsumidas, valor),
 };
