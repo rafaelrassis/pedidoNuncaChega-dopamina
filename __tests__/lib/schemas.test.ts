@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { comidaSchema, configSchema, motoboySchema } from "@/lib/schemas";
+import { comidaSchema, configSchema, motoboySchema, senhaSchema } from "@/lib/schemas";
 
 const comidaValida = {
   nome: "Feijoada",
@@ -132,6 +132,40 @@ describe("configSchema", () => {
       ...configValida,
       textosJson: { chave: 123 },
     });
+    expect(resultado.success).toBe(false);
+  });
+});
+
+const senhaValida = {
+  senhaAtual: "trocar123",
+  novaSenha: "novaSenhaForte",
+  confirmacao: "novaSenhaForte",
+};
+
+describe("senhaSchema", () => {
+  it("aceita quando a nova senha e a confirmação batem e têm 8+ caracteres", () => {
+    expect(senhaSchema.safeParse(senhaValida).success).toBe(true);
+  });
+
+  it("rejeita nova senha com menos de 8 caracteres", () => {
+    const resultado = senhaSchema.safeParse({
+      ...senhaValida,
+      novaSenha: "curta1",
+      confirmacao: "curta1",
+    });
+    expect(resultado.success).toBe(false);
+  });
+
+  it("rejeita quando a confirmação não bate com a nova senha", () => {
+    const resultado = senhaSchema.safeParse({
+      ...senhaValida,
+      confirmacao: "outraSenha",
+    });
+    expect(resultado.success).toBe(false);
+  });
+
+  it("rejeita senha atual vazia", () => {
+    const resultado = senhaSchema.safeParse({ ...senhaValida, senhaAtual: "" });
     expect(resultado.success).toBe(false);
   });
 });

@@ -31,6 +31,9 @@ export default function LayoutPainelAdmin({
           <Link href="/admin/config" className="hover:text-primaria">
             Configuração
           </Link>
+          <Link href="/admin/senha" className="hover:text-primaria">
+            Senha
+          </Link>
           <BotaoSair />
         </nav>
       </header>

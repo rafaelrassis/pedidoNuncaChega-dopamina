@@ -66,6 +66,17 @@ export const tierDoacaoSchema = z.object({
   rotulo: z.string().min(1),
 });
 
+export const senhaSchema = z
+  .object({
+    senhaAtual: z.string().min(1),
+    novaSenha: z.string().min(8, "A nova senha precisa ter no mínimo 8 caracteres"),
+    confirmacao: z.string().min(1),
+  })
+  .refine((dados) => dados.novaSenha === dados.confirmacao, {
+    message: "A confirmação não bate com a nova senha",
+    path: ["confirmacao"],
+  });
+
 export const configSchema = z.object({
   chavePix: z.string().min(1),
   nomeRecebedor: z.string().min(1),

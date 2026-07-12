@@ -45,8 +45,7 @@ Isso cria o schema e popula:
 ## 4. Depois do primeiro deploy
 
 - **Troque a senha do admin.** Acesse `/admin/login` com as credenciais do
-  seed e crie/atualize o usuário admin (via `prisma studio` apontando pra
-  produção, por enquanto — não há UI de troca de senha).
+  seed e depois vá em `/admin/senha` pra trocar a senha padrão pela sua.
 - **Configure a chave PIX real** em `/admin/config` antes de divulgar o
   site — enquanto `chavePix` for `SUA_CHAVE_AQUI`, o card de doação (`/doar`
   e o modal de entrega) fica escondido.
