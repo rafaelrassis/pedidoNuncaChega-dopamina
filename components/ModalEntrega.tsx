@@ -58,17 +58,18 @@ export default function ModalEntrega() {
 
   async function compartilharFigurinha() {
     if (!pedidoAtual) return;
-    const texto = `Tirei o ${pedidoAtual.motoboy.nome} ${RARIDADE_ROTULO[pedidoAtual.motoboy.raridade]} no PedidoNuncaChega! ${window.location.href}`;
+    const url = `${window.location.origin}/figurinha/${pedidoAtual.motoboy.id}`;
+    const texto = `Tirei o ${pedidoAtual.motoboy.nome} ${RARIDADE_ROTULO[pedidoAtual.motoboy.raridade]} no PedidoNuncaChega!`;
     if (navigator.share) {
       try {
-        await navigator.share({ text: texto });
+        await navigator.share({ text: texto, url });
       } catch {
         // usuário cancelou o compartilhamento
       }
       return;
     }
     try {
-      await navigator.clipboard.writeText(texto);
+      await navigator.clipboard.writeText(`${texto} ${url}`);
     } catch {
       // ambiente sem permissão de clipboard
     }
