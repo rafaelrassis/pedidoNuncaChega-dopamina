@@ -4,10 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useCarrinho } from "./CarrinhoProvider";
 import { formatarPreco } from "@/lib/carrinho";
+import { aplicarEventoAoTempo, sortearEventoAleatorio } from "@/lib/eventosTracking";
 
 const DURACAO_INICIAL_SEGUNDOS = 180;
+const MOMENTOS_EVENTOS_ALEATORIOS = [90, 140];
 
 type EventoFeed = { texto: string; horario: string };
+type Tempo = { restante: number; total: number };
 
 function horaAgora(): string {
   return new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
@@ -21,8 +24,10 @@ function formatarTempo(segundos: number): string {
 
 export default function TrackingModal() {
   const { pedidoAtual, trackingAberto, marcarPedidoEntregue } = useCarrinho();
-  const [segundosRestantes, setSegundosRestantes] = useState(DURACAO_INICIAL_SEGUNDOS);
-  const [duracaoTotal, setDuracaoTotal] = useState(DURACAO_INICIAL_SEGUNDOS);
+  const [tempo, setTempo] = useState<Tempo>({
+    restante: DURACAO_INICIAL_SEGUNDOS,
+    total: DURACAO_INICIAL_SEGUNDOS,
+  });
   const [eventos, setEventos] = useState<EventoFeed[]>([]);
   const [toast, setToast] = useState<string | null>(null);
   const [permissaoNotificacao, setPermissaoNotificacao] =
@@ -43,8 +48,7 @@ export default function TrackingModal() {
   useEffect(() => {
     if (!trackingAberto || !pedidoAtual) return;
 
-    setSegundosRestantes(DURACAO_INICIAL_SEGUNDOS);
-    setDuracaoTotal(DURACAO_INICIAL_SEGUNDOS);
+    setTempo({ restante: DURACAO_INICIAL_SEGUNDOS, total: DURACAO_INICIAL_SEGUNDOS });
     setEventos([{ texto: "Pedido confirmado ✅", horario: horaAgora() }]);
 
     const nomeMotoboy = pedidoAtual.motoboy.nome;
@@ -64,29 +68,27 @@ export default function TrackingModal() {
     agendar(65, () =>
       setEventos((atual) => [...atual, { texto: "Saiu pra entrega 🚀", horario: horaAgora() }])
     );
-    agendar(110, () => {
-      if (Math.random() > 0.5) {
-        setDuracaoTotal((d) => d + 40);
-        setSegundosRestantes((s) => s + 40);
-        setEventos((atual) => [
-          ...atual,
-          { texto: "Pegou chuva, +40s de emoção 🌧️", horario: horaAgora() },
-        ]);
-      } else {
-        setEventos((atual) => [
-          ...atual,
-          { texto: "Parou pra tomar uma água de coco 🥥", horario: horaAgora() },
-        ]);
-      }
+
+    // Sorteia entre 1 e 2 eventos aleatórios de humor ao longo da entrega.
+    const numEventosAleatorios = Math.random() < 0.5 ? 1 : 2;
+    MOMENTOS_EVENTOS_ALEATORIOS.slice(0, numEventosAleatorios).forEach((momento) => {
+      agendar(momento, () => {
+        const evento = sortearEventoAleatorio();
+        setTempo((atual) => {
+          const resultado = aplicarEventoAoTempo(atual.restante, atual.total, evento.deltaSegundos);
+          return { restante: resultado.segundosRestantes, total: resultado.duracaoTotal };
+        });
+        setEventos((atual) => [...atual, { texto: evento.texto, horario: horaAgora() }]);
+      });
     });
 
     const intervalo = setInterval(() => {
-      setSegundosRestantes((atual) => {
-        if (atual <= 1) {
+      setTempo((atual) => {
+        if (atual.restante <= 1) {
           clearInterval(intervalo);
-          return 0;
+          return { ...atual, restante: 0 };
         }
-        return atual - 1;
+        return { ...atual, restante: atual.restante - 1 };
       });
     }, 1000);
 
@@ -101,7 +103,7 @@ export default function TrackingModal() {
   }, [trackingAberto, pedidoAtual?.id]);
 
   useEffect(() => {
-    if (segundosRestantes === 0 && pedidoAtual && trackingAberto) {
+    if (tempo.restante === 0 && pedidoAtual && trackingAberto) {
       if (typeof window !== "undefined" && "Notification" in window) {
         if (Notification.permission === "granted") {
           new Notification("Seu pedido \"chegou\"! 🎉", {
@@ -112,7 +114,7 @@ export default function TrackingModal() {
       }
       marcarPedidoEntregue(pedidoAtual.id);
     }
-  }, [segundosRestantes, pedidoAtual, trackingAberto, marcarPedidoEntregue]);
+  }, [tempo.restante, pedidoAtual, trackingAberto, marcarPedidoEntregue]);
 
   function mostrarToast(mensagem: string) {
     setToast(mensagem);
@@ -140,10 +142,7 @@ export default function TrackingModal() {
 
   if (!trackingAberto || !pedidoAtual) return null;
 
-  const progresso = Math.min(
-    1,
-    Math.max(0, 1 - segundosRestantes / duracaoTotal)
-  );
+  const progresso = Math.min(1, Math.max(0, 1 - tempo.restante / tempo.total));
   const xMotoboy = 20 + progresso * 260;
   const yMotoboy = 80 - Math.sin(progresso * Math.PI) * 55;
 
@@ -186,7 +185,7 @@ export default function TrackingModal() {
           <div>
             <div className="mb-1 flex justify-between text-sm font-semibold">
               <span>Chegando em</span>
-              <span>{formatarTempo(segundosRestantes)}</span>
+              <span>{formatarTempo(tempo.restante)}</span>
             </div>
             <div className="h-2 w-full overflow-hidden rounded-full bg-black/10">
               <div
