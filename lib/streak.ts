@@ -20,3 +20,10 @@ export function atualizarStreak(atual: Streak, agora: Date = new Date()): Streak
 export function ganhouBonusHoje(streakAntigo: Streak, streakNovo: Streak): boolean {
   return streakNovo.dias !== streakAntigo.dias && streakNovo.dias % 7 === 0;
 }
+
+export function detectarStreakQuebrado(streakAntigo: Streak, streakNovo: Streak): number | null {
+  if (streakAntigo.dias >= 3 && streakNovo.dias === 1) {
+    return streakAntigo.dias;
+  }
+  return null;
+}

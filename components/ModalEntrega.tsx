@@ -33,6 +33,8 @@ export default function ModalEntrega() {
     figurinhaBonusRecebida,
     conquistasNovas,
     avaliarPedido,
+    streakQuebrado,
+    fecharStreakQuebrado,
   } = useCarrinho();
   const [virada, setVirada] = useState(false);
 
@@ -88,6 +90,21 @@ export default function ModalEntrega() {
               com a dopamina e cada centavo 💸
             </p>
           </div>
+
+          {streakQuebrado !== null && (
+            <div className="flex flex-col items-center gap-2 rounded-xl border border-primaria/30 bg-primaria/10 p-4 text-center">
+              <p className="font-display text-sm font-bold text-primaria">
+                😱 O motoboy comeu seu streak de {streakQuebrado}{" "}
+                {streakQuebrado === 1 ? "dia" : "dias"}
+              </p>
+              <button
+                onClick={fecharStreakQuebrado}
+                className="rounded-full bg-primaria px-4 py-1.5 text-xs font-semibold text-white transition hover:opacity-90"
+              >
+                Recomeçar do zero 💪
+              </button>
+            </div>
+          )}
 
           <div className="rounded-xl bg-fundo p-3 text-left text-sm">
             <ul className="flex flex-col gap-1">

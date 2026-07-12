@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { atualizarStreak, ganhouBonusHoje } from "@/lib/streak";
+import { atualizarStreak, detectarStreakQuebrado, ganhouBonusHoje } from "@/lib/streak";
 import type { Streak } from "@/lib/tipos";
 
 // Datas construídas com o construtor local (ano, mês 0-indexado, dia) pra
@@ -72,5 +72,36 @@ describe("ganhouBonusHoje", () => {
     expect(ganhouBonusHoje({ dias: 8, ultimaData: "x" }, { dias: 1, ultimaData: "y" })).toBe(
       false
     );
+  });
+});
+
+describe("detectarStreakQuebrado", () => {
+  it("retorna o streak antigo quando quebra com 3+ dias", () => {
+    const antigo = { dias: 5, ultimaData: "2026-07-10" };
+    const novo = { dias: 1, ultimaData: "2026-07-13" };
+    expect(detectarStreakQuebrado(antigo, novo)).toBe(5);
+  });
+
+  it("retorna null quando o streak antigo era menor que 3", () => {
+    const antigo = { dias: 2, ultimaData: "2026-07-10" };
+    const novo = { dias: 1, ultimaData: "2026-07-13" };
+    expect(detectarStreakQuebrado(antigo, novo)).toBeNull();
+  });
+
+  it("retorna null no primeiro pedido de todos (sem streak antigo)", () => {
+    const antigo = { dias: 0, ultimaData: null };
+    const novo = { dias: 1, ultimaData: "2026-07-10" };
+    expect(detectarStreakQuebrado(antigo, novo)).toBeNull();
+  });
+
+  it("retorna null quando o streak continua normalmente", () => {
+    const antigo = { dias: 5, ultimaData: "2026-07-10" };
+    const novo = { dias: 6, ultimaData: "2026-07-11" };
+    expect(detectarStreakQuebrado(antigo, novo)).toBeNull();
+  });
+
+  it("retorna null quando pede de novo no mesmo dia (streak inalterado)", () => {
+    const antigo = { dias: 5, ultimaData: "2026-07-10" };
+    expect(detectarStreakQuebrado(antigo, antigo)).toBeNull();
   });
 });

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { CarrinhoProvider, useCarrinho } from "@/components/CarrinhoProvider";
+import { storage } from "@/lib/storage";
 import { criarMotoboy } from "../fixtures";
 
 function mockFetchMotoboys(motoboys = [criarMotoboy()]) {
@@ -110,6 +111,39 @@ describe("CarrinhoProvider", () => {
     expect(result.current.trackingAberto).toBe(true);
     expect(result.current.checkoutAberto).toBe(false);
     expect(result.current.pedidoAtual?.id).toBe(pedido!.id);
+  });
+
+  it("detecta streak quebrado quando pede após pular vários dias", async () => {
+    const dataAntiga = new Date();
+    dataAntiga.setDate(dataAntiga.getDate() - 5);
+    const anoMesDia = `${dataAntiga.getFullYear()}-${String(dataAntiga.getMonth() + 1).padStart(2, "0")}-${String(dataAntiga.getDate()).padStart(2, "0")}`;
+    storage.setStreak({ dias: 5, ultimaData: anoMesDia });
+
+    const { result } = renderHook(() => useCarrinho(), { wrapper: CarrinhoProvider });
+    await waitFor(() => expect(result.current.streak.dias).toBe(5));
+
+    act(() => result.current.adicionarItem(itemBase));
+    act(() => {
+      result.current.criarPedido();
+    });
+
+    expect(result.current.streak.dias).toBe(1);
+    expect(result.current.streakQuebrado).toBe(5);
+
+    act(() => result.current.fecharStreakQuebrado());
+    expect(result.current.streakQuebrado).toBeNull();
+  });
+
+  it("não sinaliza streak quebrado no primeiro pedido de todos", async () => {
+    const { result } = renderHook(() => useCarrinho(), { wrapper: CarrinhoProvider });
+    await waitFor(() => expect(result.current.motoboys.length).toBeGreaterThan(0));
+
+    act(() => result.current.adicionarItem(itemBase));
+    act(() => {
+      result.current.criarPedido();
+    });
+
+    expect(result.current.streakQuebrado).toBeNull();
   });
 
   it("avaliarPedido grava a nota no pedido atual e na lista de pedidos", async () => {

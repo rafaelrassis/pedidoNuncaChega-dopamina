@@ -19,7 +19,7 @@ import {
   gerarIdPedido,
 } from "@/lib/carrinho";
 import { sortearMotoboy } from "@/lib/motoboys";
-import { atualizarStreak, ganhouBonusHoje } from "@/lib/streak";
+import { atualizarStreak, detectarStreakQuebrado, ganhouBonusHoje } from "@/lib/streak";
 import { calcularAlbum } from "@/lib/album";
 import { calcularRegioesColetadas } from "@/lib/passaporte";
 import { calcularConquistas, type Conquista } from "@/lib/conquistas";
@@ -80,6 +80,8 @@ type CarrinhoContextValor = {
   streak: Streak;
   figurinhasBonus: MotoboyPublico[];
   figurinhaBonusRecebida: MotoboyPublico | null;
+  streakQuebrado: number | null;
+  fecharStreakQuebrado: () => void;
 
   conquistasNovas: Conquista[];
 
@@ -108,6 +110,7 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   const [figurinhaBonusRecebida, setFigurinhaBonusRecebida] = useState<MotoboyPublico | null>(
     null
   );
+  const [streakQuebrado, setStreakQuebrado] = useState<number | null>(null);
   const [conquistasNovas, setConquistasNovas] = useState<Conquista[]>([]);
   const [repetidasConsumidas, setRepetidasConsumidas] = useState<RepetidasConsumidas>({});
   const [trocaAberta, setTrocaAberta] = useState(false);
@@ -251,6 +254,7 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
     const streakAntigo = streak;
     const streakNovo = atualizarStreak(streakAntigo);
     setStreak(streakNovo);
+    setStreakQuebrado(detectarStreakQuebrado(streakAntigo, streakNovo));
 
     setFigurinhaBonusRecebida(null);
     let figurinhasBonusNovo = figurinhasBonus;
@@ -304,6 +308,10 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
   function fecharEntrega() {
     setEntregaAberta(false);
     setPedidoAtual(null);
+  }
+
+  function fecharStreakQuebrado() {
+    setStreakQuebrado(null);
   }
 
   function avaliarPedido(id: string, nota: number) {
@@ -372,6 +380,8 @@ export function CarrinhoProvider({ children }: { children: React.ReactNode }) {
         streak,
         figurinhasBonus,
         figurinhaBonusRecebida,
+        streakQuebrado,
+        fecharStreakQuebrado,
 
         conquistasNovas,
 
