@@ -5,12 +5,14 @@ import Link from "next/link";
 import { useCarrinho } from "./CarrinhoProvider";
 import { formatarPreco } from "@/lib/carrinho";
 import { aplicarEventoAoTempo, sortearEventoAleatorio } from "@/lib/eventosTracking";
+import { MENSAGENS_PRESET, sortearRespostaMotoboy } from "@/lib/chatMotoboy";
 
 const DURACAO_INICIAL_SEGUNDOS = 180;
 const MOMENTOS_EVENTOS_ALEATORIOS = [90, 140];
 
 type EventoFeed = { texto: string; horario: string };
 type Tempo = { restante: number; total: number };
+type MensagemChat = { autor: "usuario" | "motoboy"; texto: string };
 
 function horaAgora(): string {
   return new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
@@ -32,7 +34,10 @@ export default function TrackingModal() {
   const [toast, setToast] = useState<string | null>(null);
   const [permissaoNotificacao, setPermissaoNotificacao] =
     useState<NotificationPermission | null>(null);
+  const [chatAberto, setChatAberto] = useState(false);
+  const [mensagensChat, setMensagensChat] = useState<MensagemChat[]>([]);
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const chatTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!trackingAberto || !pedidoAtual) return;
@@ -115,6 +120,24 @@ export default function TrackingModal() {
       marcarPedidoEntregue(pedidoAtual.id);
     }
   }, [tempo.restante, pedidoAtual, trackingAberto, marcarPedidoEntregue]);
+
+  useEffect(() => {
+    if (!trackingAberto) {
+      setChatAberto(false);
+      setMensagensChat([]);
+      if (chatTimeoutRef.current) clearTimeout(chatTimeoutRef.current);
+    }
+  }, [trackingAberto]);
+
+  function enviarMensagemChat(texto: string) {
+    if (!pedidoAtual) return;
+    setMensagensChat((atual) => [...atual, { autor: "usuario", texto }]);
+    const atraso = 1000 + Math.random() * 2000;
+    chatTimeoutRef.current = setTimeout(() => {
+      const resposta = sortearRespostaMotoboy(pedidoAtual.motoboy);
+      setMensagensChat((atual) => [...atual, { autor: "motoboy", texto: resposta }]);
+    }, atraso);
+  }
 
   function mostrarToast(mensagem: string) {
     setToast(mensagem);
@@ -214,7 +237,48 @@ export default function TrackingModal() {
             >
               📞 Ligar
             </button>
+            <button
+              onClick={() => setChatAberto((atual) => !atual)}
+              className="shrink-0 rounded-full border border-black/10 px-3 py-1.5 text-xs font-semibold"
+            >
+              💬 Mensagem
+            </button>
           </div>
+
+          {chatAberto && (
+            <div className="flex flex-col gap-3 rounded-xl border border-black/10 p-3">
+              <div className="flex max-h-40 flex-col gap-1.5 overflow-y-auto text-sm">
+                {mensagensChat.length === 0 && (
+                  <p className="text-xs text-foreground/50">
+                    Manda uma mensagem pro {pedidoAtual.motoboy.nome}.
+                  </p>
+                )}
+                {mensagensChat.map((msg, i) => (
+                  <div
+                    key={i}
+                    className={`max-w-[80%] rounded-xl px-3 py-1.5 ${
+                      msg.autor === "usuario"
+                        ? "self-end bg-primaria text-white"
+                        : "self-start bg-fundo"
+                    }`}
+                  >
+                    {msg.texto}
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {MENSAGENS_PRESET.map((mensagem) => (
+                  <button
+                    key={mensagem}
+                    onClick={() => enviarMensagemChat(mensagem)}
+                    className="rounded-full bg-fundo px-3 py-1.5 text-xs font-semibold"
+                  >
+                    {mensagem}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div>
             <h3 className="mb-2 text-sm font-semibold">Status do pedido</h3>
