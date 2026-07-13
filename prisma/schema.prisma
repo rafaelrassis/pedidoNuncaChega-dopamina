@@ -20,6 +20,36 @@ enum Regiao {
   CENTRO_OESTE
 }
 
+enum Estado {
+  AC
+  AL
+  AP
+  AM
+  BA
+  CE
+  DF
+  ES
+  GO
+  MA
+  MT
+  MS
+  MG
+  PA
+  PB
+  PR
+  PE
+  PI
+  RJ
+  RN
+  RS
+  RO
+  RR
+  SC
+  SP
+  SE
+  TO
+}
+
 enum Raridade {
   COMUM
   RARO
@@ -38,6 +68,7 @@ model Comida {
   nome               String
   slug               String   @unique
   regiao             Regiao
+  estado             Estado
   descricao          String
   precoFake          Decimal  @db.Decimal(10, 2)
   descontoPct        Int      @default(0)
@@ -59,6 +90,7 @@ model Motoboy {
   id           String   @id @default(cuid())
   nome         String
   avatarEmoji  String
+  fotoUrl      String?
   frase        String
   raridade     Raridade
   pesoSorteio  Int      @default(10)
