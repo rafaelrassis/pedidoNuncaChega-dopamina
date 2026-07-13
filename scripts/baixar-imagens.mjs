@@ -59,21 +59,53 @@ const imagens = [
   ["public/img/motoboys/arara-azul.jpg", "Arara_Azul_no_Pantanal.jpg"],
 ];
 
+// Wikimedia pede um User-Agent identificado e não gosta de rajadas de
+// requisição sem pausa — sem isso, o Special:FilePath começa a devolver
+// 429 depois de poucos arquivos (https://meta.wikimedia.org/wiki/User-Agent_policy).
+const USER_AGENT =
+  "PedidoNuncaChega/1.0 (https://github.com/rafaelrassis/pedidoNuncaChega-dopamina; build script)";
+const PAUSA_ENTRE_DOWNLOADS_MS = 300;
+const MAX_TENTATIVAS = 4;
+
+const espera = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 async function baixar(destino, nomeArquivo) {
   const url = BASE + encodeURI(nomeArquivo);
-  const resposta = await fetch(url, { redirect: "follow" });
-  if (!resposta.ok) {
+
+  for (let tentativa = 1; tentativa <= MAX_TENTATIVAS; tentativa++) {
+    const resposta = await fetch(url, {
+      redirect: "follow",
+      headers: { "User-Agent": USER_AGENT },
+    });
+
+    if (resposta.ok) {
+      const buffer = Buffer.from(await resposta.arrayBuffer());
+      await mkdir(path.dirname(destino), { recursive: true });
+      await writeFile(destino, buffer);
+      console.log(`OK  ${destino}`);
+      return;
+    }
+
+    if (resposta.status === 429 && tentativa < MAX_TENTATIVAS) {
+      const retryAfter = Number(resposta.headers.get("retry-after"));
+      const esperaMs = Number.isFinite(retryAfter) && retryAfter > 0
+        ? retryAfter * 1000
+        : 1000 * 2 ** tentativa;
+      console.warn(
+        `429 em ${nomeArquivo}, tentativa ${tentativa}/${MAX_TENTATIVAS} — esperando ${esperaMs}ms`
+      );
+      await espera(esperaMs);
+      continue;
+    }
+
     throw new Error(`Falha ao baixar ${nomeArquivo}: HTTP ${resposta.status}`);
   }
-  const buffer = Buffer.from(await resposta.arrayBuffer());
-  await mkdir(path.dirname(destino), { recursive: true });
-  await writeFile(destino, buffer);
-  console.log(`OK  ${destino}`);
 }
 
 async function main() {
   for (const [destino, nomeArquivo] of imagens) {
     await baixar(destino, nomeArquivo);
+    await espera(PAUSA_ENTRE_DOWNLOADS_MS);
   }
   console.log(`Baixadas ${imagens.length} imagens do Wikimedia Commons.`);
 }
