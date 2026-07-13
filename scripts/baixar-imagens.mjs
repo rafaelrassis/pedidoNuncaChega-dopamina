@@ -20,7 +20,7 @@ const imagens = [
   ["public/img/acai-raiz.jpg", "Açaí_do_Pará.jpg"],
   ["public/img/tacaca.jpg", "Tacacá_de_Imperatriz_-_MA.jpg"],
   ["public/img/pequi-com-frango.jpg", "Galinhada_com_pequi.jpg"],
-  ["public/img/pamonha.png", "Pamonha_Voadora.png"],
+  ["public/img/pamonha.jpg", "Pamonha.jpg"],
   ["public/img/baixaria.jpg", "Tapioca_de_carne_seca_com_brócolis_02.jpg"],
   ["public/img/sururu-ao-coco.jpg", "Caldo_de_Sururu,_Salvador,_BA,_14-02-2023.jpg"],
   ["public/img/camarao-no-bafo.jpg", "Moqueca_de_peixe_e_camarao_(7519822014).jpg"],
@@ -103,11 +103,38 @@ async function baixar(destino, nomeArquivo) {
 }
 
 async function main() {
+  const falhas = [];
   for (const [destino, nomeArquivo] of imagens) {
-    await baixar(destino, nomeArquivo);
+    try {
+      await baixar(destino, nomeArquivo);
+    } catch (erro) {
+      console.warn(`AVISO: ${erro.message}`);
+      falhas.push({ destino, nomeArquivo });
+    }
     await espera(PAUSA_ENTRE_DOWNLOADS_MS);
   }
-  console.log(`Baixadas ${imagens.length} imagens do Wikimedia Commons.`);
+
+  const sucesso = imagens.length - falhas.length;
+  console.log(`Baixadas ${sucesso}/${imagens.length} imagens do Wikimedia Commons.`);
+
+  if (falhas.length > 0) {
+    console.warn(
+      `${falhas.length} imagem(ns) não baixaram (arquivo renomeado/removido no Commons?) — ` +
+        `o build continua, mas essas fotos vão quebrar no site até alguém trocar o link em ` +
+        `scripts/baixar-imagens.mjs:`
+    );
+    for (const { destino, nomeArquivo } of falhas) {
+      console.warn(`  - ${destino} <- ${nomeArquivo}`);
+    }
+  }
+
+  // Não falha o build por causa de fotos individuais indisponíveis — a
+  // migração e o seed são mais importantes que uma imagem quebrada. Só
+  // falha se TODAS as imagens falharem, o que indica um problema maior
+  // (ex: Wikimedia fora do ar, ou rede bloqueada no ambiente de build).
+  if (sucesso === 0) {
+    throw new Error("Nenhuma imagem foi baixada — abortando o build.");
+  }
 }
 
 main().catch((erro) => {
