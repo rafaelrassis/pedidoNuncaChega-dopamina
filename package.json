@@ -5,7 +5,8 @@
   "scripts": {
     "postinstall": "prisma generate",
     "dev": "next dev",
-    "build": "prisma migrate deploy && prisma db seed && next build",
+    "build": "node scripts/baixar-imagens.mjs && prisma migrate deploy && prisma db seed && next build",
+    "baixar-imagens": "node scripts/baixar-imagens.mjs",
     "start": "next start",
     "lint": "next lint",
     "db:up": "docker compose up -d",
