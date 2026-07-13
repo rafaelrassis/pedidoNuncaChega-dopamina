@@ -20,6 +20,7 @@ export default async function EditarComidaPage({
           nome: comida.nome,
           slug: comida.slug,
           regiao: comida.regiao,
+          estado: comida.estado,
           descricao: comida.descricao,
           precoFake: Number(comida.precoFake),
           descontoPct: comida.descontoPct,

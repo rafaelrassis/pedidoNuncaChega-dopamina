@@ -9,6 +9,7 @@ export async function GET() {
       id: true,
       nome: true,
       avatarEmoji: true,
+      fotoUrl: true,
       frase: true,
       raridade: true,
       pesoSorteio: true,

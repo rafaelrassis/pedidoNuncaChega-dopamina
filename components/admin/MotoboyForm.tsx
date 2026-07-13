@@ -8,6 +8,7 @@ const RARIDADES = ["COMUM", "RARO", "LENDARIO"] as const;
 type ValorMotoboy = {
   nome: string;
   avatarEmoji: string;
+  fotoUrl: string;
   frase: string;
   raridade: (typeof RARIDADES)[number];
   pesoSorteio: number;
@@ -17,6 +18,7 @@ type ValorMotoboy = {
 const VALOR_PADRAO: ValorMotoboy = {
   nome: "",
   avatarEmoji: "🏍️",
+  fotoUrl: "",
   frase: "",
   raridade: "COMUM",
   pesoSorteio: 10,
@@ -87,6 +89,16 @@ export default function MotoboyForm({
           className="rounded-lg border border-black/10 px-3 py-2 text-sm outline-none focus:border-primaria"
           value={valor.avatarEmoji}
           onChange={(e) => campo("avatarEmoji", e.target.value)}
+        />
+      </label>
+
+      <label className="flex flex-col gap-1 text-sm font-medium">
+        Foto (URL)
+        <input
+          className="rounded-lg border border-black/10 px-3 py-2 text-sm outline-none focus:border-primaria"
+          value={valor.fotoUrl}
+          onChange={(e) => campo("fotoUrl", e.target.value)}
+          placeholder="https://commons.wikimedia.org/wiki/Special:FilePath/..."
         />
       </label>
 

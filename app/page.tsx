@@ -15,6 +15,7 @@ export default async function Home() {
     nome: c.nome,
     slug: c.slug,
     regiao: c.regiao,
+    estado: c.estado,
     descricao: c.descricao,
     precoFake: Number(c.precoFake),
     descontoPct: c.descontoPct,
