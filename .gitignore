@@ -32,6 +32,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# fotos baixadas do Wikimedia Commons no build (scripts/baixar-imagens.mjs)
+/public/img/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

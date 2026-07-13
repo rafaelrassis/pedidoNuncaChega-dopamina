@@ -56,7 +56,7 @@ const comidas = [
 4. Adicione as carnes e doure bem.
 5. Junte tudo ao feijão e cozinhe por 40 minutos em fogo baixo.
 6. Ajuste o sal e sirva com arroz branco, couve refogada e farofa.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Feijoada_à_brasileira_1.jpg",
+    fotoUrl: "/img/feijoada.jpg",
   },
   {
     nome: "Coxinha",
@@ -89,7 +89,7 @@ const comidas = [
 4. Deixe esfriar e modele bolinhas recheadas em formato de gota.
 5. Passe no ovo e na farinha panko.
 6. Frite em óleo quente até dourar.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Coxinha_-_iguaria_brasileira_02.jpg",
+    fotoUrl: "/img/coxinha.jpg",
   },
   {
     nome: "Acarajé",
@@ -120,7 +120,7 @@ const comidas = [
 4. Tempere com sal.
 5. Frite porções da massa em azeite de dendê bem quente.
 6. Abra o acarajé e recheie com vatapá, caruru e camarão.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Acarajé_store_-_Porto_Seguro-_Bahia_(50903485997).jpg",
+    fotoUrl: "/img/acaraje.jpg",
   },
   {
     nome: "Baião de Dois",
@@ -152,7 +152,7 @@ const comidas = [
 4. Acrescente o arroz cru e misture bem.
 5. Cozinhe em fogo baixo até o arroz secar.
 6. Finalize com queijo coalho e coentro picado por cima.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Baião_de_dois.jpg",
+    fotoUrl: "/img/baiao-de-dois.jpg",
   },
   {
     nome: "Churrasco",
@@ -184,7 +184,7 @@ const comidas = [
 5. Vire as carnes poucas vezes para selar bem.
 6. Retire no ponto desejado e deixe descansar antes de fatiar.
 7. Sirva com farofa e vinagrete.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Churrasco_brasileiro.jpg",
+    fotoUrl: "/img/churrasco.jpg",
   },
   {
     nome: "Chimarrão com Pão de Queijo",
@@ -221,7 +221,7 @@ const comidas = [
 4. Para o pão de queijo, ferva leite, óleo e sal e escalde o polvilho.
 5. Deixe esfriar, adicione os ovos e o queijo e sove até homogêneo.
 6. Modele bolinhas e asse a 180°C por 25 minutos.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Pão_de_queijo.jpg",
+    fotoUrl: "/img/chimarrao-pao-de-queijo.jpg",
   },
   {
     nome: "Açaí Raiz",
@@ -251,7 +251,7 @@ const comidas = [
 4. Acrescente camarão seco torrado a gosto.
 5. Se quiser mais doce, adicione um fio de açúcar ou xarope de guaraná.
 6. Sirva imediatamente, bem gelado.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Açaí_do_Pará.jpg",
+    fotoUrl: "/img/acai-raiz.jpg",
   },
   {
     nome: "Tacacá",
@@ -283,7 +283,7 @@ const comidas = [
 4. Adicione a goma ao tucupi fervendo, mexendo até engrossar levemente.
 5. Distribua a goma nas cuias, cubra com o caldo quente.
 6. Finalize com jambu, camarão seco e pimenta a gosto.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Tacacá_de_Imperatriz_-_MA.jpg",
+    fotoUrl: "/img/tacaca.jpg",
   },
   {
     nome: "Pequi com Frango",
@@ -318,7 +318,7 @@ const comidas = [
 
 **Atenção:** o pequi tem espinhos internos — nunca morda direto, apenas
 chupe a polpa ao redor do caroço.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Galinhada_com_pequi.jpg",
+    fotoUrl: "/img/pequi-com-frango.jpg",
   },
   {
     nome: "Pamonha",
@@ -351,7 +351,7 @@ chupe a polpa ao redor do caroço.`,
 5. Se for salgada, adicione uma tira de queijo antes de fechar.
 6. Amarre bem as pontas com tiras de palha.
 7. Cozinhe em água fervente por cerca de 40 minutos.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Pamonha_Voadora.png",
+    fotoUrl: "/img/pamonha.png",
   },
   {
     nome: "Baixaria",
@@ -385,7 +385,7 @@ chupe a polpa ao redor do caroço.`,
 4. Frite os ovos com a gema mole.
 5. Monte o prato com o cuscuz desmanchado, a carne por cima e o ovo frito.
 6. Finalize com cheiro-verde picado.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Tapioca_de_carne_seca_com_brócolis_02.jpg",
+    fotoUrl: "/img/baixaria.jpg",
   },
   {
     nome: "Sururu ao Coco",
@@ -417,7 +417,7 @@ chupe a polpa ao redor do caroço.`,
 3. Acrescente o leite de coco e deixe engrossar em fogo baixo.
 4. Tempere com sal, pimenta e coentro picado.
 5. Sirva bem quente, com farofa e arroz branco.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Caldo_de_Sururu,_Salvador,_BA,_14-02-2023.jpg",
+    fotoUrl: "/img/sururu-ao-coco.jpg",
   },
   {
     nome: "Camarão no Bafo",
@@ -448,7 +448,7 @@ chupe a polpa ao redor do caroço.`,
 3. Tampe bem e cozinhe no próprio vapor, sem adicionar água, por 8-10 minutos.
 4. Finalize com coentro e cheiro-verde picados.
 5. Sirva imediatamente, ainda fumegando.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Moqueca_de_peixe_e_camarao_(7519822014).jpg",
+    fotoUrl: "/img/camarao-no-bafo.jpg",
   },
   {
     nome: "Galinhada com Pequi",
@@ -480,7 +480,7 @@ chupe a polpa ao redor do caroço.`,
 4. Acrescente o arroz e o açafrão-da-terra.
 5. Cozinhe em fogo baixo até o arroz secar.
 6. Sirva quente, avisando sobre os espinhos do pequi.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Galinhada_com_pequi.jpg",
+    fotoUrl: "/img/galinhada-com-pequi.jpg",
   },
   {
     nome: "Moqueca Capixaba",
@@ -513,7 +513,7 @@ chupe a polpa ao redor do caroço.`,
 4. Cozinhe em fogo baixo, sem mexer, até o peixe ficar macio.
 5. Finalize com coentro e cebolinha picados.
 6. Sirva com arroz branco e pirão.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Moqueca_capixaba_18_de_janeiro_de_2014_(2).JPG",
+    fotoUrl: "/img/moqueca-capixaba.jpg",
   },
   {
     nome: "Arroz de Cuxá",
@@ -545,7 +545,7 @@ chupe a polpa ao redor do caroço.`,
 4. Misture o refogado de camarão ao molho.
 5. Junte a farinha de mandioca aos poucos até engrossar.
 6. Sirva o molho de cuxá sobre o arroz branco.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Cuxá_(tentativa).jpg",
+    fotoUrl: "/img/arroz-de-cuxa.jpg",
   },
   {
     nome: "Maria Isabel",
@@ -576,7 +576,7 @@ chupe a polpa ao redor do caroço.`,
 3. Cubra com água quente e cozinhe em fogo baixo.
 4. Finalize com cheiro-verde picado.
 5. Sirva com farofa de banana.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Arroz_Carreteiro_2.jpg",
+    fotoUrl: "/img/maria-isabel.jpg",
   },
   {
     nome: "Feijão Tropeiro",
@@ -609,7 +609,7 @@ chupe a polpa ao redor do caroço.`,
 4. Mexa os ovos na panela até cozinhar.
 5. Junte a farinha de mandioca aos poucos, mexendo sempre.
 6. Finalize com a couve picada e o bacon reservado.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Feijão_tropeiro.jpg",
+    fotoUrl: "/img/feijao-tropeiro.jpg",
   },
   {
     nome: "Cuscuz com Carne de Sol",
@@ -640,7 +640,7 @@ chupe a polpa ao redor do caroço.`,
 3. Desenforme o cuscuz e sirva com a carne de sol por cima.
 4. Grelhe o queijo coalho e adicione ao prato.
 5. Acompanhe com banana-da-terra frita, se quiser.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Carne_de_sol.jpg",
+    fotoUrl: "/img/cuscuz-com-carne-de-sol.jpg",
   },
   {
     nome: "Barreado",
@@ -671,7 +671,7 @@ chupe a polpa ao redor do caroço.`,
 3. Tampe bem e cozinhe em fogo baixo por várias horas, até desmanchar.
 4. Desfie a carne dentro do próprio caldo.
 5. Sirva com farinha de mandioca polvilhada e banana fatiada.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Barreado.jpg",
+    fotoUrl: "/img/barreado.jpg",
   },
   {
     nome: "Arrumadinho Pernambucano",
@@ -702,7 +702,7 @@ chupe a polpa ao redor do caroço.`,
 4. Grelhe o queijo coalho em cubos.
 5. Arrume em camadas: feijão-verde, macaxeira e charque.
 6. Finalize com o queijo coalho grelhado e cheiro-verde.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/BRUNO_LIMA_GASTRONOMIA_CARNE_DE_SOL_GRAVATÁ_PE_(40198041084).jpg",
+    fotoUrl: "/img/arrumadinho-pernambucano.jpg",
   },
   {
     nome: "Paçoca de Carne de Sol",
@@ -732,7 +732,7 @@ chupe a polpa ao redor do caroço.`,
 3. Socar a carne desfiada com a farinha de mandioca no pilão (ou pulsar no processador).
 4. Misture o refogado à mistura socada até ficar homogêneo.
 5. Sirva com arroz branco e feijão.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Carne_de_sol_maturada.jpg",
+    fotoUrl: "/img/pacoca-de-carne-de-sol.jpg",
   },
   {
     nome: "Camarão na Moranga",
@@ -763,7 +763,7 @@ chupe a polpa ao redor do caroço.`,
 3. Junte o creme de leite e deixe engrossar.
 4. Recheie a moranga assada com o creme de camarão.
 5. Cubra com queijo ralado e leve ao forno para gratinar.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Camarão_na_moranga.JPG",
+    fotoUrl: "/img/camarao-na-moranga.jpg",
   },
   {
     nome: "Pirarucu à Casaca",
@@ -795,7 +795,7 @@ chupe a polpa ao redor do caroço.`,
 4. Coloque numa travessa e cubra com farinha de mandioca.
 5. Leve ao forno até gratinar levemente.
 6. Finalize com cheiro-verde picado.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Pirarucu.JPG",
+    fotoUrl: "/img/pirarucu-a-casaca.jpg",
   },
   {
     nome: "Damurida",
@@ -827,7 +827,7 @@ chupe a polpa ao redor do caroço.`,
 
 **Atenção:** prato tradicionalmente bem apimentado — vai com calma se
 não estiver acostumado.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Peixe.Dourada.Fish.jpg",
+    fotoUrl: "/img/damurida.jpg",
   },
   {
     nome: "Sequência de Camarão",
@@ -856,7 +856,7 @@ não estiver acostumado.`,
 2. Empane outra porção no ovo e farinha de rosca e frite até dourar.
 3. Refogue cebola e tomate, junte camarão e creme de leite para o molho.
 4. Sirva as três preparações juntas, com arroz e batata frita.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Moqueca_de_peixe_e_camarao_(7519822014).jpg",
+    fotoUrl: "/img/sequencia-de-camarao.jpg",
   },
   {
     nome: "Caranguejada",
@@ -887,7 +887,7 @@ não estiver acostumado.`,
 3. Cubra com o leite de coco e cozinhe em fogo médio até os caranguejos ficarem prontos.
 4. Finalize com bastante coentro picado.
 5. Sirva com martelinho para quebrar a casca — parte da experiência.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Caranguejo_na_raiz_do_mangue.jpg",
+    fotoUrl: "/img/caranguejada.jpg",
   },
   {
     nome: "Peixe na Telha",
@@ -917,7 +917,7 @@ não estiver acostumado.`,
 3. Cubra com tomate e cebola fatiados e regue com azeite.
 4. Leve ao forno até o peixe ficar macio e levemente dourado.
 5. Finalize com cheiro-verde picado.`,
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Peixe_pedra.jpg",
+    fotoUrl: "/img/peixe-na-telha.jpg",
   },
 ];
 
@@ -925,7 +925,7 @@ const motoboys = [
   {
     nome: "Jailson da Biz",
     avatarEmoji: "🏍️",
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Jaguatirica_ou_Gato_do_mato.jpg",
+    fotoUrl: "/img/motoboys/jaguatirica.jpg",
     frase: "Tô chegando, confia",
     raridade: Raridade.COMUM,
     pesoSorteio: 10,
@@ -933,7 +933,7 @@ const motoboys = [
   {
     nome: "Marquinhos da Fan",
     avatarEmoji: "🛵",
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Toco_toucan_(Ramphastos_toco).jpg",
+    fotoUrl: "/img/motoboys/tucano.jpg",
     frase: "Já tô virando a esquina",
     raridade: Raridade.COMUM,
     pesoSorteio: 10,
@@ -941,7 +941,7 @@ const motoboys = [
   {
     nome: "Zé do Capacete Torto",
     avatarEmoji: "🪖",
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/A_capivara_-_Parque_Barigui_-_Curitiba_(PR).jpg",
+    fotoUrl: "/img/motoboys/capivara.jpg",
     frase: "Calma que eu chego",
     raridade: Raridade.COMUM,
     pesoSorteio: 10,
@@ -949,7 +949,7 @@ const motoboys = [
   {
     nome: "Rogério Entregas Relâmpago",
     avatarEmoji: "⚡",
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Gavião-real_(Harpia_harpyja).jpg",
+    fotoUrl: "/img/motoboys/gaviao-real.jpg",
     frase: "Rápido é o meu nome do meio",
     raridade: Raridade.COMUM,
     pesoSorteio: 10,
@@ -957,7 +957,7 @@ const motoboys = [
   {
     nome: "Wanderson da CG",
     avatarEmoji: "🏍️",
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Quati_na_Serra_do_Rio_do_Rastro,_RS,_Brasil.jpg",
+    fotoUrl: "/img/motoboys/quati.jpg",
     frase: "Só um cafezinho e já vou",
     raridade: Raridade.COMUM,
     pesoSorteio: 10,
@@ -965,7 +965,7 @@ const motoboys = [
   {
     nome: "Deivid do Grupo do Zap",
     avatarEmoji: "📱",
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Papagaio_falante.jpg",
+    fotoUrl: "/img/motoboys/papagaio.jpg",
     frase: "Te mandei a localização, olha lá",
     raridade: Raridade.COMUM,
     pesoSorteio: 10,
@@ -973,7 +973,7 @@ const motoboys = [
   {
     nome: "Fabinho Sem Pressa",
     avatarEmoji: "🐌",
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Bicho-preguiça_(Folivora).jpg",
+    fotoUrl: "/img/motoboys/bicho-preguica.jpg",
     frase: "Devagar se chega longe",
     raridade: Raridade.COMUM,
     pesoSorteio: 10,
@@ -981,7 +981,7 @@ const motoboys = [
   {
     nome: "Anderson da Chuva",
     avatarEmoji: "🌧️",
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Jacaré_na_APA_do_Miriti_Manacapuru_AM.jpg",
+    fotoUrl: "/img/motoboys/jacare.jpg",
     frase: "Segurando o capacete e a fé",
     raridade: Raridade.COMUM,
     pesoSorteio: 10,
@@ -989,7 +989,7 @@ const motoboys = [
   {
     nome: "Dona Cida da Kombi",
     avatarEmoji: "🚐",
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Tamanduá-bandeira_com_filhote_em_pastagem.jpg",
+    fotoUrl: "/img/motoboys/tamandua-bandeira.jpg",
     frase: "Levo até fogão se precisar",
     raridade: Raridade.RARO,
     pesoSorteio: 3,
@@ -997,7 +997,7 @@ const motoboys = [
   {
     nome: "Sargento Empanado",
     avatarEmoji: "🎖️",
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Tatu_Mulita.jpg",
+    fotoUrl: "/img/motoboys/tatu.jpg",
     frase: "Missão dada é missão cumprida",
     raridade: Raridade.RARO,
     pesoSorteio: 3,
@@ -1005,7 +1005,7 @@ const motoboys = [
   {
     nome: "Neon do Rolê Noturno",
     avatarEmoji: "🌃",
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Coruja_Buraqueira_(Athene_cunicularia).jpg",
+    fotoUrl: "/img/motoboys/coruja.jpg",
     frase: "Entrego até de madrugada, sem medo",
     raridade: Raridade.RARO,
     pesoSorteio: 3,
@@ -1013,7 +1013,7 @@ const motoboys = [
   {
     nome: "Barão do Grau",
     avatarEmoji: "🤙",
-    fotoUrl: "https://commons.wikimedia.org/wiki/Special:FilePath/Arara_Azul_no_Pantanal.jpg",
+    fotoUrl: "/img/motoboys/arara-azul.jpg",
     frase: "Cheguei de empinada",
     raridade: Raridade.LENDARIO,
     pesoSorteio: 1,
