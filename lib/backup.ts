@@ -26,6 +26,7 @@ const motoboyPublicoSchema = z.object({
   id: z.string(),
   nome: z.string(),
   avatarEmoji: z.string(),
+  fotoUrl: z.string().nullable().default(null),
   frase: z.string(),
   raridade: z.enum(["COMUM", "RARO", "LENDARIO"]),
   pesoSorteio: z.number(),

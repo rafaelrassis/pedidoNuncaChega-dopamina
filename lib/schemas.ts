@@ -26,6 +26,12 @@ export const regiaoSchema = z.enum([
 
 export const raridadeSchema = z.enum(["COMUM", "RARO", "LENDARIO"]);
 
+export const estadoSchema = z.enum([
+  "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS",
+  "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC",
+  "SP", "SE", "TO",
+]);
+
 export const comidaSchema = z.object({
   nome: z.string().min(1),
   slug: z
@@ -33,6 +39,7 @@ export const comidaSchema = z.object({
     .min(1)
     .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Use apenas minúsculas, números e hífen"),
   regiao: regiaoSchema,
+  estado: estadoSchema,
   descricao: z.string().min(1),
   precoFake: z.number().nonnegative(),
   descontoPct: z.number().int().min(0).max(100),
@@ -53,6 +60,7 @@ export const comidaUpdateSchema = comidaSchema.partial();
 export const motoboySchema = z.object({
   nome: z.string().min(1),
   avatarEmoji: z.string().min(1),
+  fotoUrl: z.string().min(1).nullable().optional(),
   frase: z.string().min(1),
   raridade: raridadeSchema,
   pesoSorteio: z.number().int().positive(),
