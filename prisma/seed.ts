@@ -446,7 +446,7 @@ async function main() {
   for (const comida of comidas) {
     await prisma.comida.upsert({
       where: { slug: comida.slug },
-      update: comida,
+      update: {},
       create: comida,
     });
   }
@@ -455,12 +455,7 @@ async function main() {
     const existente = await prisma.motoboy.findFirst({
       where: { nome: motoboy.nome },
     });
-    if (existente) {
-      await prisma.motoboy.update({
-        where: { id: existente.id },
-        data: motoboy,
-      });
-    } else {
+    if (!existente) {
       await prisma.motoboy.create({ data: motoboy });
     }
   }
