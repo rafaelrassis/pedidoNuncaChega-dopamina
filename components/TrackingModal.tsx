@@ -224,7 +224,16 @@ export default function TrackingModal() {
           </div>
 
           <div className="flex items-center gap-3 rounded-xl bg-fundo p-3">
-            <span className="text-3xl">{pedidoAtual.motoboy.avatarEmoji}</span>
+            {pedidoAtual.motoboy.fotoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={pedidoAtual.motoboy.fotoUrl}
+                alt={pedidoAtual.motoboy.nome}
+                className="h-10 w-10 rounded-full object-cover"
+              />
+            ) : (
+              <span className="text-3xl">{pedidoAtual.motoboy.avatarEmoji}</span>
+            )}
             <div className="flex-1">
               <p className="text-sm font-bold">{pedidoAtual.motoboy.nome}</p>
               <p className="text-xs text-foreground/60">&ldquo;{pedidoAtual.motoboy.frase}&rdquo;</p>
