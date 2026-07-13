@@ -55,7 +55,16 @@ export default function ModalTroca() {
                 style={{ transform: "rotateY(180deg)" }}
               >
                 <span className="absolute -top-2 text-lg">✨</span>
-                <span className="text-5xl">{trocaRecebida.avatarEmoji}</span>
+                {trocaRecebida.fotoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={trocaRecebida.fotoUrl}
+                    alt={trocaRecebida.nome}
+                    className="h-16 w-16 rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-5xl">{trocaRecebida.avatarEmoji}</span>
+                )}
                 <span className="font-display text-sm font-bold">{trocaRecebida.nome}</span>
                 <span className="text-xs text-foreground/60">
                   &ldquo;{trocaRecebida.frase}&rdquo;

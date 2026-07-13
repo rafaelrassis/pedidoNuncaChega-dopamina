@@ -5,6 +5,7 @@ export function criarMotoboy(overrides: Partial<MotoboyPublico> = {}): MotoboyPu
     id: "motoboy-1",
     nome: "Jailson da Biz",
     avatarEmoji: "🏍️",
+    fotoUrl: null,
     frase: "Tô chegando, confia",
     raridade: "COMUM",
     pesoSorteio: 10,

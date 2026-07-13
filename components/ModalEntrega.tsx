@@ -149,7 +149,16 @@ export default function ModalEntrega() {
                   {pedidoAtual.motoboy.raridade !== "COMUM" && (
                     <span className="absolute -top-2 text-lg">✨</span>
                   )}
-                  <span className="text-5xl">{pedidoAtual.motoboy.avatarEmoji}</span>
+                  {pedidoAtual.motoboy.fotoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={pedidoAtual.motoboy.fotoUrl}
+                      alt={pedidoAtual.motoboy.nome}
+                      className="h-16 w-16 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-5xl">{pedidoAtual.motoboy.avatarEmoji}</span>
+                  )}
                   <span className="font-display text-sm font-bold">{pedidoAtual.motoboy.nome}</span>
                   <span className="text-xs text-foreground/60">
                     &ldquo;{pedidoAtual.motoboy.frase}&rdquo;

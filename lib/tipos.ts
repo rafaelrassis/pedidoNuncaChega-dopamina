@@ -1,4 +1,4 @@
-import type { Regiao } from "@prisma/client";
+import type { Regiao, Estado } from "@prisma/client";
 
 export type OpcaoItem = { nome: string; acrescimo: number };
 
@@ -28,6 +28,7 @@ export type ComidaCliente = {
   nome: string;
   slug: string;
   regiao: Regiao;
+  estado: Estado;
   descricao: string;
   precoFake: number;
   descontoPct: number;
@@ -55,6 +56,7 @@ export type MotoboyPublico = {
   id: string;
   nome: string;
   avatarEmoji: string;
+  fotoUrl: string | null;
   frase: string;
   raridade: Raridade;
   pesoSorteio: number;

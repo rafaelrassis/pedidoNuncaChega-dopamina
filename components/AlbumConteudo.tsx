@@ -57,7 +57,16 @@ export default function AlbumConteudo() {
                   coletado ? MOLDURA_POR_RARIDADE[m.raridade] : "border-black/5 bg-black/5"
                 }`}
               >
-                <span className="text-3xl">{coletado ? m.avatarEmoji : "❓"}</span>
+                {coletado && m.fotoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={m.fotoUrl}
+                    alt={m.nome}
+                    className="h-12 w-12 rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-3xl">{coletado ? m.avatarEmoji : "❓"}</span>
+                )}
                 <span className="text-xs font-semibold">{coletado ? m.nome : "???"}</span>
                 {coletado && m.raridade !== "COMUM" && <span className="text-xs">✨</span>}
               </div>

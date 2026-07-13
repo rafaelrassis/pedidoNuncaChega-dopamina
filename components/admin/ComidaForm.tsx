@@ -6,10 +6,17 @@ import EditorOpcoes, { type GrupoOpcoes } from "./EditorOpcoes";
 
 const REGIOES = ["NORDESTE", "NORTE", "SUDESTE", "SUL", "CENTRO_OESTE"] as const;
 
+const ESTADOS = [
+  "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS",
+  "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC",
+  "SP", "SE", "TO",
+] as const;
+
 type ValorComida = {
   nome: string;
   slug: string;
   regiao: (typeof REGIOES)[number];
+  estado: (typeof ESTADOS)[number];
   descricao: string;
   precoFake: number;
   descontoPct: number;
@@ -29,6 +36,7 @@ const VALOR_PADRAO: ValorComida = {
   nome: "",
   slug: "",
   regiao: "SUDESTE",
+  estado: "SP",
   descricao: "",
   precoFake: 20,
   descontoPct: 0,
@@ -113,6 +121,19 @@ export default function ComidaForm({
             {REGIOES.map((r) => (
               <option key={r} value={r}>
                 {r}
+              </option>
+            ))}
+          </select>
+        </Campo>
+        <Campo label="Estado">
+          <select
+            className="input"
+            value={valor.estado}
+            onChange={(e) => campo("estado", e.target.value as ValorComida["estado"])}
+          >
+            {ESTADOS.map((uf) => (
+              <option key={uf} value={uf}>
+                {uf}
               </option>
             ))}
           </select>

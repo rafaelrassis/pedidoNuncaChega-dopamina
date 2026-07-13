@@ -4,6 +4,7 @@ export const MOTOBOY_PADRAO: MotoboyPublico = {
   id: "fallback",
   nome: "Motoboy Misterioso",
   avatarEmoji: "🏍️",
+  fotoUrl: null,
   frase: "Sumiu no mapa, mas tá vindo",
   raridade: "COMUM",
   pesoSorteio: 1,

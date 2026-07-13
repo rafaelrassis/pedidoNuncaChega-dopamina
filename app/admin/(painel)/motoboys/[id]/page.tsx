@@ -18,6 +18,7 @@ export default async function EditarMotoboyPage({
           id: motoboy.id,
           nome: motoboy.nome,
           avatarEmoji: motoboy.avatarEmoji,
+          fotoUrl: motoboy.fotoUrl ?? "",
           frase: motoboy.frase,
           raridade: motoboy.raridade,
           pesoSorteio: motoboy.pesoSorteio,
