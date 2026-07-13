@@ -351,7 +351,7 @@ chupe a polpa ao redor do caroço.`,
 5. Se for salgada, adicione uma tira de queijo antes de fechar.
 6. Amarre bem as pontas com tiras de palha.
 7. Cozinhe em água fervente por cerca de 40 minutos.`,
-    fotoUrl: "/img/pamonha.png",
+    fotoUrl: "/img/pamonha.jpg",
   },
   {
     nome: "Baixaria",
