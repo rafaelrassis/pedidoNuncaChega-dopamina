@@ -5,6 +5,7 @@ const comidaValida = {
   nome: "Feijoada",
   slug: "feijoada",
   regiao: "SUDESTE" as const,
+  estado: "RJ" as const,
   descricao: "O clássico prato de sábado.",
   precoFake: 42.9,
   descontoPct: 20,
