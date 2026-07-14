@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import UploadImagem from "./UploadImagem";
 
 const RARIDADES = ["COMUM", "RARO", "LENDARIO"] as const;
 
@@ -93,12 +94,11 @@ export default function MotoboyForm({
       </label>
 
       <label className="flex flex-col gap-1 text-sm font-medium">
-        Foto (URL)
-        <input
-          className="rounded-lg border border-black/10 px-3 py-2 text-sm outline-none focus:border-primaria"
+        Foto
+        <UploadImagem
           value={valor.fotoUrl}
-          onChange={(e) => campo("fotoUrl", e.target.value)}
-          placeholder="https://commons.wikimedia.org/wiki/Special:FilePath/..."
+          onChange={(url) => campo("fotoUrl", url)}
+          pasta="motoboys"
         />
       </label>
 
