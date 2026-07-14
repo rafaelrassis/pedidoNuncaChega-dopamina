@@ -16,31 +16,33 @@ Crie um projeto Postgres gratuito em [neon.tech](https://neon.tech) ou
 3. Configure as variáveis de ambiente (Project Settings → Environment
    Variables):
 
-   | Variável              | Valor                                                              |
-   | ---------------------- | ------------------------------------------------------------------- |
-   | `DATABASE_URL`         | connection string do Neon/Supabase                                  |
-   | `JWT_SECRET`           | uma string aleatória longa (ex: `openssl rand -base64 32`)          |
-   | `NEXT_PUBLIC_SITE_URL` | URL final do site, ex: `https://pedidonuncachega.com.br`             |
+   | Variável                 | Valor                                                              |
+   | ------------------------- | ------------------------------------------------------------------- |
+   | `DATABASE_URL`            | connection string do Neon/Supabase (pooled)                         |
+   | `DIRECT_URL`              | connection string direta (sem pooler), usada pelo Prisma Migrate    |
+   | `JWT_SECRET`              | uma string aleatória longa (ex: `openssl rand -base64 32`)          |
+   | `NEXT_PUBLIC_SITE_URL`    | URL final do site, ex: `https://pedidonuncachega.com.br`             |
+   | `BLOB_READ_WRITE_TOKEN`   | criado ao conectar um Vercel Blob store ao projeto (ver passo 4)    |
 
-4. Deploy.
+4. **Storage → Create Database → Blob**, conecte o store ao projeto. A
+   Vercel injeta `BLOB_READ_WRITE_TOKEN` automaticamente — é o que permite
+   o upload de fotos pelo `/admin`.
+5. Deploy.
 
 ## 3. Migrations + seed
 
-O schema e os dados iniciais (catálogo de comidas, motoboys, config) não
-sobem sozinhos — rode uma vez, apontando pro banco de produção:
-
-```bash
-# localmente, com DATABASE_URL apontando pro banco de produção
-DATABASE_URL="<connection string de produção>" npx prisma migrate deploy
-DATABASE_URL="<connection string de produção>" npx prisma db seed
-```
-
-Isso cria o schema e popula:
+Rodam sozinhos: o `build` do projeto já executa
+`prisma migrate deploy && prisma db seed` antes do `next build` (ver
+`package.json`). Não precisa rodar nada manualmente. O primeiro deploy
+cria o schema e popula:
 
 - 1 admin (`admin@pnc.dev` / senha `trocar123`)
-- 10 comidas (2 por região)
+- 27 comidas (uma por estado)
 - 12 motoboys (8 comuns, 3 raros, 1 lendário)
 - 1 registro de `Configuracao` com chave PIX placeholder
+
+O seed é idempotente — roda de novo em todo deploy sem sobrescrever
+edições feitas no `/admin`.
 
 ## 4. Depois do primeiro deploy
 
@@ -49,9 +51,11 @@ Isso cria o schema e popula:
 - **Configure a chave PIX real** em `/admin/config` antes de divulgar o
   site — enquanto `chavePix` for `SUA_CHAVE_AQUI`, o card de doação (`/doar`
   e o modal de entrega) fica escondido.
-- **Fotos dos pratos**: os `fotoUrl` do seed apontam pra `/img/*.jpg`, que
-  ainda não existem. Adicione as imagens em `public/img/` (ou troque as
-  URLs em `/admin/comidas` por imagens hospedadas em outro lugar).
+- **Fotos dos pratos e motoboys**: o seed já vem com fotos reais
+  (baixadas do Wikimedia Commons durante o build, via
+  `scripts/baixar-imagens.mjs`). Pra trocar qualquer uma, vá em
+  `/admin/comidas` ou `/admin/motoboys` e faça upload de uma nova foto —
+  fica salva no Vercel Blob e não depende mais do Wikimedia.
 
 ## Notas
 

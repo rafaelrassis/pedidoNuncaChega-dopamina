@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import EditorOpcoes, { type GrupoOpcoes } from "./EditorOpcoes";
+import UploadImagem from "./UploadImagem";
 
 const REGIOES = ["NORDESTE", "NORTE", "SUDESTE", "SUL", "CENTRO_OESTE"] as const;
 
@@ -138,13 +139,11 @@ export default function ComidaForm({
             ))}
           </select>
         </Campo>
-        <Campo label="Foto (URL)">
-          <input
-            required
-            className="input"
+        <Campo label="Foto">
+          <UploadImagem
             value={valor.fotoUrl}
-            onChange={(e) => campo("fotoUrl", e.target.value)}
-            placeholder="/img/feijoada.jpg"
+            onChange={(url) => campo("fotoUrl", url)}
+            pasta="comidas"
           />
         </Campo>
         <Campo label="Preço fake (R$)">
